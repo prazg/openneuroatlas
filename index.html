@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenNeuroAtlas — Living Observatory for Neurosurgery, Neuroimaging &amp; Surgical AI</title>
+  <meta
+    name="description"
+    content="A living, PR-extensible open-science registry and coverage-gap observatory cataloging open datasets, foundation models, clinical toolkits, and MICCAI benchmarks across neurosurgery, neuroimaging, neuro-oncology, and surgical AI."
+  />
+  <meta name="color-scheme" content="dark light" />
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1120'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2310b981' stroke-width='2'/%3E%3Cpath d='M16 6v20M6 16h20' stroke='%2338bdf8' stroke-width='1.5' stroke-dasharray='2 2'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%2310b981'/%3E%3C/svg%3E"
+  />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('openneuroatlas-theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- Sticky Editorial Masthead -->
+  <header class="masthead" role="banner">
+    <div class="masthead-inner container">
+      <div class="brand-group">
+        <a href="#view=explorer&amp;tab=datasets" class="brand-link" aria-label="OpenNeuroAtlas Home">
+          <span class="brand-emblem" aria-hidden="true">
+            <svg viewBox="0 0 36 36" width="32" height="32" fill="none">
+              <rect x="1" y="1" width="34" height="34" rx="9" fill="var(--bg-elevated)" stroke="var(--border-strong)" stroke-width="1.25" />
+              <circle cx="18" cy="18" r="10.5" stroke="var(--accent-emerald)" stroke-width="1.6" stroke-opacity="0.9" />
+              <ellipse cx="18" cy="18" rx="10.5" ry="5" stroke="var(--accent-cyan)" stroke-width="1.2" stroke-opacity="0.7" transform="rotate(-28 18 18)" />
+              <ellipse cx="18" cy="18" rx="10.5" ry="5" stroke="var(--accent-amber)" stroke-width="1.2" stroke-opacity="0.65" transform="rotate(34 18 18)" />
+              <circle cx="18" cy="18" r="2.8" fill="var(--accent-emerald)" />
+              <circle cx="24.5" cy="12" r="1.6" fill="var(--accent-cyan)" />
+              <circle cx="11.5" cy="23.5" r="1.5" fill="var(--accent-amber)" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">OpenNeuroAtlas</span>
+            <span class="brand-tagline">Neurosurgery &amp; Neuroimaging AI Observatory</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Primary View Navigation -->
+      <nav class="primary-nav" aria-label="Primary observatory views" role="tablist">
+        <button
+          type="button"
+          class="nav-tab is-active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="view-explorer"
+          data-view="explorer"
+        >
+          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <rect x="2.5" y="3" width="6" height="6" rx="1.4" />
+            <rect x="11.5" y="3" width="6" height="6" rx="1.4" />
+            <rect x="2.5" y="11" width="6" height="6" rx="1.4" />
+            <rect x="11.5" y="11" width="6" height="6" rx="1.4" />
+          </svg>
+          <span>Explore Catalog</span>
+        </button>
+        <button
+          type="button"
+          class="nav-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="view-analytics"
+          data-view="analytics"
+        >
+          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <path d="M3 16.5h14" stroke-linecap="round" />
+            <rect x="4" y="10" width="3" height="6.5" rx="0.8" />
+            <rect x="8.5" y="6.5" width="3" height="10" rx="0.8" />
+            <rect x="13" y="3.5" width="3" height="13" rx="0.8" />
+          </svg>
+          <span>Coverage &amp; Gap Observatory</span>
+        </button>
+        <button
+          type="button"
+          class="nav-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="view-contribute"
+          data-view="contribute"
+        >
+          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <circle cx="5.5" cy="5" r="2" />
+            <circle cx="5.5" cy="15" r="2" />
+            <circle cx="14.5" cy="15" r="2" />
+            <path d="M5.5 7v6M14.5 13V8.5a3 3 0 0 0-3-3H9" stroke-linecap="round" />
+            <path d="M10.5 3.5L8.5 5.5l2 2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Contribute via PR</span>
+        </button>
+      </nav>
+
+      <!-- Header Utility Controls -->
+      <div class="masthead-actions">
+        <span id="header-schema-badge" class="meta-pill mono" title="Registry schema version">v1.0.0</span>
+        <button
+          type="button"
+          id="btn-theme-toggle"
+          class="icon-pill-btn"
+          aria-label="Toggle dark and light theme"
+          title="Toggle Dark / Light Theme (shortcut: t)"
+        >
+          <svg id="theme-icon-sun" class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <circle cx="10" cy="10" r="3.5" />
+            <path d="M10 2.2v1.8M10 16v1.8M2.2 10H4M16 10h1.8M4.5 4.5l1.3 1.3M14.2 14.2l1.3 1.3M15.5 4.5l-1.3 1.3M5.8 14.2l-1.3 1.3" stroke-linecap="round" />
+          </svg>
+          <svg id="theme-icon-moon" class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" hidden>
+            <path d="M16.5 11.9A6.8 6.8 0 0 1 8.1 3.5a7 7 0 1 0 8.4 8.4Z" stroke-linejoin="round" />
+          </svg>
+          <span id="theme-toggle-label">Light</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Editorial Observatory Hero & Live KPI Strip -->
+  <section class="hero-band" aria-label="Registry Overview and Key Indicators">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <div class="hero-eyebrow">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Living Open-Science Registry</span>
+          <span class="eyebrow-sep" aria-hidden="true">&middot;</span>
+          <span id="header-updated-badge" class="mono">Loading snapshot&hellip;</span>
+        </div>
+        <h1 class="hero-title">
+          Mapping open data, foundation models &amp; blind spots in <span class="title-accent">neurosurgical AI</span>.
+        </h1>
+        <p class="hero-subtitle">
+          Machine-validated catalog of perioperative neuroimaging cohorts, surgical video &amp; ultrasound databases, open-weight foundation models, and MICCAI benchmarks—with honest bias notes, reproducible fetch code, and instant BibTeX/RIS export.
+        </p>
+      </div>
+
+      <!-- Live 6-Metric KPI Strip -->
+      <div class="kpi-strip" role="region" aria-label="Live Registry Metrics">
+        <button type="button" class="kpi-card kpi-emerald" data-kpi-action="datasets" title="Jump to Datasets catalog">
+          <span class="kpi-label">Datasets</span>
+          <span id="kpi-datasets" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-datasets-sub" class="kpi-sub">Indexed cohorts</span>
+        </button>
+
+        <button type="button" class="kpi-card kpi-cyan" data-kpi-action="models" title="Jump to Foundation Models &amp; Toolkits">
+          <span class="kpi-label">Models &amp; Toolkits</span>
+          <span id="kpi-models" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-models-sub" class="kpi-sub">Open weights</span>
+        </button>
+
+        <button type="button" class="kpi-card kpi-amber" data-kpi-action="challenges" title="Jump to MICCAI Benchmarks">
+          <span class="kpi-label">Benchmarks</span>
+          <span id="kpi-challenges" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-challenges-sub" class="kpi-sub">MICCAI &amp; open</span>
+        </button>
+
+        <button type="button" class="kpi-card kpi-emerald" data-kpi-action="open-access" title="Filter to direct Open Access datasets">
+          <span class="kpi-label">Open-Access Share</span>
+          <span id="kpi-open-access" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-open-access-sub" class="kpi-sub">Direct download</span>
+        </button>
+
+        <button type="button" class="kpi-card kpi-cyan" data-kpi-action="longitudinal" title="Filter to Longitudinal cohorts">
+          <span class="kpi-label">Longitudinal Cohorts</span>
+          <span id="kpi-longitudinal" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-longitudinal-sub" class="kpi-sub">Multi-timepoint</span>
+        </button>
+
+        <button type="button" class="kpi-card kpi-amber" data-kpi-action="molecular" title="Filter to Molecular-Annotated cohorts">
+          <span class="kpi-label">Molecular-Annotated</span>
+          <span id="kpi-molecular" class="kpi-value mono">&mdash;</span>
+          <span id="kpi-molecular-sub" class="kpi-sub">Biomarker-linked</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offline / file:// Protocol Guard Banner -->
+  <div id="offline-guard-banner" class="container" hidden>
+    <div class="alert-banner alert-warning" role="alert">
+      <div class="alert-icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10 2.5 18 17H2L10 2.5Z" stroke-linejoin="round" />
+          <path d="M10 8v4M10 14.5h.01" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="alert-body">
+        <h3>Unable to load registry JSON files</h3>
+        <p id="offline-guard-message">
+          Browsers block ES module and <code>fetch()</code> requests over the <code>file://</code> protocol. Launch a zero-dependency local server from the repository root and open <code>http://localhost:8000</code>:
+        </p>
+        <div class="inline-cmd-row">
+          <code class="mono">python -m http.server 8000</code>
+          <button type="button" id="btn-copy-server-cmd" class="btn btn-sm btn-secondary">Copy Command</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main id="main-content" class="main-workspace container">
+    <!-- =================================================================== -->
+    <!-- VIEW 1: EXPLORE CATALOG                                             -->
+    <!-- =================================================================== -->
+    <section id="view-explorer" class="view-panel" role="tabpanel" aria-label="Explore Catalog">
+      <!-- Sub-tabs & Search Toolbar -->
+      <div class="catalog-header">
+        <div class="subtab-bar" role="tablist" aria-label="Resource collections">
+          <button type="button" class="subtab-btn is-active" role="tab" aria-selected="true" data-catalog-tab="datasets">
+            <span>Datasets</span>
+            <span id="tab-count-datasets" class="count-pill mono">0</span>
+          </button>
+          <button type="button" class="subtab-btn" role="tab" aria-selected="false" data-catalog-tab="models">
+            <span>Foundation Models &amp; Toolkits</span>
+            <span id="tab-count-models" class="count-pill mono">0</span>
+          </button>
+          <button type="button" class="subtab-btn" role="tab" aria-selected="false" data-catalog-tab="challenges">
+            <span>MICCAI Challenges</span>
+            <span id="tab-count-challenges" class="count-pill mono">0</span>
+          </button>
+          <button type="button" class="subtab-btn" role="tab" aria-selected="false" data-catalog-tab="all">
+            <span>All Resources</span>
+            <span id="tab-count-all" class="count-pill mono">0</span>
+          </button>
+        </div>
+
+        <div class="catalog-toolbar">
+          <div class="search-field">
+            <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="9" cy="9" r="5.5" />
+              <path d="M13.5 13.5 17 17" stroke-linecap="round" />
+            </svg>
+            <input
+              type="search"
+              id="catalog-search"
+              class="search-input"
+              placeholder="Search datasets, pathologies, modalities, biomarkers (e.g., IDH, iUS, ReMIND, nnU-Net)..."
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search registry"
+            />
+            <button type="button" id="btn-clear-search" class="search-clear-btn" aria-label="Clear search" hidden>
+              &times;
+            </button>
+            <kbd class="kbd-hint" title="Press / to focus search">/</kbd>
+          </div>
+
+          <div class="toolbar-controls">
+            <button
+              type="button"
+              id="btn-toggle-filters"
+              class="btn btn-secondary btn-filter-toggle"
+              aria-expanded="true"
+              aria-controls="filter-sidebar"
+            >
+              <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                <path d="M3 5h14M5.5 10h9M8 15h4" stroke-linecap="round" />
+              </svg>
+              <span>Filters</span>
+              <span id="filter-active-badge" class="badge-dot mono" hidden>0</span>
+            </button>
+
+            <label class="sort-control" for="catalog-sort">
+              <span class="sr-only">Sort resources</span>
+              <select id="catalog-sort" class="select-input" aria-label="Sort results">
+                <option value="year-desc">Newest First</option>
+                <option value="cohort-desc">Largest Cohort</option>
+                <option value="openness">Most Open Access</option>
+                <option value="name-asc">Name (A&ndash;Z)</option>
+                <option value="year-asc">Oldest First</option>
+                <option value="relevance">Search Relevance</option>
+              </select>
+            </label>
+
+            <div class="segmented-control" role="group" aria-label="Display layout">
+              <button type="button" id="btn-layout-cards" class="seg-btn is-active" title="Card grid view" aria-pressed="true">
+                <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <rect x="3" y="3.5" width="6" height="5.5" rx="1" />
+                  <rect x="11" y="3.5" width="6" height="5.5" rx="1" />
+                  <rect x="3" y="11" width="6" height="5.5" rx="1" />
+                  <rect x="11" y="11" width="6" height="5.5" rx="1" />
+                </svg>
+                <span class="sr-only">Cards</span>
+              </button>
+              <button type="button" id="btn-layout-table" class="seg-btn" title="Compact table view" aria-pressed="false">
+                <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M3 5.5h14M3 10h14M3 14.5h14" stroke-linecap="round" />
+                </svg>
+                <span class="sr-only">Table</span>
+              </button>
+            </div>
+
+            <div class="toolbar-export-group">
+              <button type="button" id="btn-export-filtered-bib" class="btn btn-ghost btn-sm" title="Download BibTeX for current filtered view">
+                .bib
+              </button>
+              <button type="button" id="btn-export-filtered-csv" class="btn btn-ghost btn-sm" title="Download CSV for current filtered view">
+                .csv
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explorer Split Layout: Facet Sidebar + Results -->
+      <div id="explorer-layout" class="explorer-layout">
+        <div id="mobile-filter-scrim" class="mobile-scrim" hidden></div>
+        <aside id="filter-sidebar" class="filter-sidebar" aria-label="Faceted filters">
+          <div class="sidebar-header">
+            <div class="sidebar-title-row">
+              <h2>Filter Facets</h2>
+              <button type="button" id="btn-reset-sidebar-filters" class="text-link-btn" hidden>Reset all</button>
+            </div>
+            <button type="button" id="btn-close-filters-mobile" class="icon-btn mobile-only" aria-label="Close filters">
+              &times;
+            </button>
+          </div>
+          <div id="filter-facets-container" class="facets-stack">
+            <!-- Dynamically populated by app.js from schema vocabularies & disjunctive counts -->
+          </div>
+        </aside>
+
+        <div class="catalog-main">
+          <!-- Active Filter Chips Bar -->
+          <div id="active-filters-bar" class="active-filters-bar" hidden></div>
+
+          <!-- Results Count Bar -->
+          <div class="results-meta-bar">
+            <p id="results-summary" class="results-summary" aria-live="polite">Loading catalog&hellip;</p>
+            <p class="results-hint">
+              Pin up to 4 items to compare side-by-side or bulk export citations.
+            </p>
+          </div>
+
+          <!-- Loading Skeleton -->
+          <div id="catalog-loading" class="cards-grid" aria-hidden="true">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <!-- Catalog Results Container (Cards Grid or Table) -->
+          <div id="catalog-results" class="catalog-results"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 2: COVERAGE & GAP OBSERVATORY (PURE SVG ANALYTICS)             -->
+    <!-- =================================================================== -->
+    <section id="view-analytics" class="view-panel" role="tabpanel" aria-label="Coverage and Gap Observatory" hidden>
+      <div class="section-intro">
+        <div>
+          <span class="section-kicker">Interactive Open-Data Telemetry</span>
+          <h2 class="section-title">Coverage &amp; Gap Observatory</h2>
+          <p class="section-desc">
+            Inspect the intersection of clinical modalities and neurosurgical pathologies, identify zero-count open-science white spaces, and jump directly to filtered cohorts or PR submissions.
+          </p>
+        </div>
+      </div>
+
+      <!-- Primary Panel: Modality x Pathology Interactive Heatmap -->
+      <article class="viz-panel viz-panel-featured">
+        <header class="viz-panel-header">
+          <div>
+            <h3>Modality &times; Pathology Open-Data Coverage Heatmap</h3>
+            <p id="analytics-heatmap-subtitle" class="viz-subtitle">
+              Hover any cell to inspect cataloged datasets. Click any cell or axis label to jump straight to that filtered slice in the Catalog. Dashed cells explicitly highlight 0-count open-data gaps.
+            </p>
+          </div>
+          <div id="heatmap-metric-controls" class="segmented-control" role="group" aria-label="Heatmap metric">
+            <button type="button" class="seg-btn is-active" data-heatmap-metric="datasets" aria-pressed="true">Datasets Only</button>
+            <button type="button" class="seg-btn" data-heatmap-metric="all" aria-pressed="false">All Records</button>
+            <button type="button" class="seg-btn" data-heatmap-metric="openAccess" aria-pressed="false">Open Access Only</button>
+          </div>
+        </header>
+        <div id="chart-heatmap" class="viz-stage viz-stage-heatmap"></div>
+      </article>
+
+      <!-- Secondary Row: Cohort Size & Access Tier Breakdown -->
+      <div class="viz-grid-two">
+        <article class="viz-panel">
+          <header class="viz-panel-header">
+            <div>
+              <h3>Cohort Size Landscape</h3>
+              <p class="viz-subtitle">Largest cataloged patient cohorts colored by governance tier. Click any bar to inspect details.</p>
+            </div>
+            <div id="cohort-scale-controls" class="segmented-control" role="group" aria-label="Cohort axis scale">
+              <button type="button" class="seg-btn is-active" data-cohort-scale="log" aria-pressed="true">Log Scale</button>
+              <button type="button" class="seg-btn" data-cohort-scale="linear" aria-pressed="false">Linear</button>
+            </div>
+          </header>
+          <div id="chart-cohort-bars" class="viz-stage"></div>
+        </article>
+
+        <article class="viz-panel">
+          <header class="viz-panel-header">
+            <div>
+              <h3>Access Governance Breakdown</h3>
+              <p class="viz-subtitle">Share of datasets and cumulative patient volume across access barriers. Click any tier to filter.</p>
+            </div>
+          </header>
+          <div id="chart-access-tier" class="viz-stage"></div>
+        </article>
+      </div>
+
+      <!-- Release Timeline Chart -->
+      <article class="viz-panel">
+        <header class="viz-panel-header">
+          <div>
+            <h3>Open-Science Release Timeline &amp; Cumulative Growth</h3>
+            <p class="viz-subtitle">Annual releases across datasets, models, and challenges with cumulative trajectory. Click a year column to filter.</p>
+          </div>
+        </header>
+        <div id="chart-timeline" class="viz-stage"></div>
+      </article>
+
+      <!-- Auto-Computed Open-Data Gap Callouts -->
+      <section class="gaps-section" aria-label="Automated Open-Data Gap Callouts">
+        <div class="gaps-header">
+          <div>
+            <span class="section-kicker kicker-amber">Algorithmic Gap Analysis</span>
+            <h3 class="gaps-title">Critical Open-Data Blind Spots &amp; Community Priorities</h3>
+            <p class="viz-subtitle">
+              Programmatically computed from live registry metadata across intraoperative modalities, perioperative phases, access bottlenecks, biomarkers, and global low-field equity.
+            </p>
+          </div>
+          <span id="gap-count-badge" class="meta-pill meta-pill-amber mono">0 gaps detected</span>
+        </div>
+        <div id="gap-callouts-grid" class="gap-callouts-grid"></div>
+      </section>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 3: CONTRIBUTE VIA PR (SCHEMA-DRIVEN BUILDER)                   -->
+    <!-- =================================================================== -->
+    <section id="view-contribute" class="view-panel" role="tabpanel" aria-label="Contribute via Pull Request" hidden>
+      <div class="section-intro">
+        <div>
+          <span class="section-kicker kicker-emerald">Schema-Validated Contribution Workbench</span>
+          <h2 class="section-title">Contribute a Resource via GitHub PR</h2>
+          <p class="section-desc">
+            Build a schema-compliant JSON record using controlled vocabularies loaded live from <code>schemas/registry-schema.json</code>. Real-time validation mirrors the Python CI gate (<code>tests/validate_registry.py</code>).
+          </p>
+        </div>
+      </div>
+
+      <div id="pr-builder-root" class="pr-builder-root"></div>
+    </section>
+  </main>
+
+  <!-- Editorial Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-title">OpenNeuroAtlas</span>
+        <span class="footer-meta">
+          Zero-build static open-science observatory &middot; MIT License &middot;
+          <span id="footer-schema-version" class="mono">Schema v1.0.0</span> &middot;
+          Last updated <span id="footer-last-updated" class="mono">&mdash;</span>
+        </span>
+      </div>
+      <div class="footer-right">
+        <span id="footer-record-counts" class="mono footer-counts"></span>
+        <span class="footer-shortcuts">Shortcuts: <kbd>/</kbd> search &middot; <kbd>t</kbd> theme &middot; <kbd>Esc</kbd> close</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Persistent Bottom Selection & Comparator Dock -->
+  <aside id="comparator-dock" class="comparator-dock" aria-label="Pinned items comparator and bulk export" hidden>
+    <div class="comparator-dock-inner container">
+      <div class="dock-left">
+        <div class="dock-heading">
+          <span class="dock-dot" aria-hidden="true"></span>
+          <span id="dock-count-badge" class="dock-count mono">0 pinned</span>
+        </div>
+        <div id="dock-items-list" class="dock-chips"></div>
+      </div>
+      <div class="dock-actions">
+        <button type="button" id="btn-dock-compare" class="btn btn-primary btn-sm">
+          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <rect x="2.5" y="4" width="6" height="12" rx="1.2" />
+            <rect x="11.5" y="4" width="6" height="12" rx="1.2" />
+          </svg>
+          <span>Compare Side-by-Side</span>
+        </button>
+        <button type="button" id="btn-dock-bib" class="btn btn-secondary btn-sm" title="Download BibTeX (.bib) for all pinned items">
+          Export BibTeX (.bib)
+        </button>
+        <button type="button" id="btn-dock-ris" class="btn btn-ghost btn-sm" title="Download RIS (.ris) for Zotero/EndNote">
+          .ris
+        </button>
+        <button type="button" id="btn-dock-csv" class="btn btn-ghost btn-sm" title="Download CSV for all pinned items">
+          .csv
+        </button>
+        <button type="button" id="btn-dock-clear" class="btn btn-ghost btn-sm btn-danger-text" title="Clear pinned selection">
+          Clear
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Detail Modal (Full Metadata, Limitations, Starter Code Snippet, 1-Click Citations) -->
+  <div id="detail-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title" hidden>
+    <div class="modal-dialog modal-detail">
+      <header class="modal-header">
+        <div class="modal-header-text">
+          <div id="detail-modal-badges" class="modal-badges"></div>
+          <h2 id="detail-modal-title" class="modal-title"></h2>
+          <p id="detail-modal-subtitle" class="modal-subtitle"></p>
+        </div>
+        <div class="modal-header-actions">
+          <button type="button" id="detail-modal-pin-btn" class="btn btn-secondary btn-sm">Pin to Compare</button>
+          <button type="button" id="detail-modal-close" class="icon-btn modal-close-btn" aria-label="Close detail dialog">
+            &times;
+          </button>
+        </div>
+      </header>
+      <div id="detail-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Side-by-Side Comparator Modal (Up to 4 Items + Markdown/CSV/BibTeX Export) -->
+  <div id="compare-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="compare-modal-heading" hidden>
+    <div class="modal-dialog modal-compare">
+      <header class="modal-header">
+        <div class="modal-header-text">
+          <span class="section-kicker">Side-by-Side Resource Comparator</span>
+          <h2 id="compare-modal-heading" class="modal-title">Structured Cohort &amp; Tool Comparison</h2>
+          <p id="compare-modal-subtitle" class="modal-subtitle"></p>
+        </div>
+        <div class="modal-header-actions compare-export-actions">
+          <button type="button" id="btn-compare-copy-md" class="btn btn-secondary btn-sm">Copy Markdown</button>
+          <button type="button" id="btn-compare-dl-md" class="btn btn-ghost btn-sm">.md</button>
+          <button type="button" id="btn-compare-dl-csv" class="btn btn-ghost btn-sm">.csv</button>
+          <button type="button" id="btn-compare-dl-bib" class="btn btn-primary btn-sm">.bib</button>
+          <button type="button" id="compare-modal-close" class="icon-btn modal-close-btn" aria-label="Close comparator dialog">
+            &times;
+          </button>
+        </div>
+      </header>
+      <div id="compare-modal-body" class="modal-body compare-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Shared Interactive Floating Tooltip for SVG Charts -->
+  <div id="chart-tooltip" class="chart-tooltip" role="tooltip" hidden></div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+name: Submit New Resource (Dataset / Model / Challenge)
+description: Propose a new open-access dataset, foundation model or clinical toolkit, or MICCAI / open benchmark for OpenNeuroAtlas.
+title: "[Resource Submission]: "
+labels:
+  - registry-submission
+  - triage
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to **OpenNeuroAtlas**!
+
+        > **Fastest path (PR-ready):** Use the in-app **Submit via PR** builder on the live OpenNeuroAtlas site to generate a schema-validated JSON record against `schemas/registry-schema.json`. You can either open a Pull Request directly (see `CONTRIBUTING.md`) or paste the validated JSON block at the bottom of this form.
+        >
+        > Prefer not to use Git? Simply complete the structured fields below and maintainers will review and integrate your submission.
+
+  - type: dropdown
+    id: resource-type
+    attributes:
+      label: Resource Type
+      description: Which registry collection does this submission belong to?
+      options:
+        - Dataset (data/datasets.json)
+        - Model / Clinical Toolkit (data/models.json)
+        - Challenge / Open Benchmark (data/challenges.json)
+    validations:
+      required: true
+
+  - type: input
+    id: resource-name
+    attributes:
+      label: Official Full Name (and Short Name / Acronym)
+      description: Official title as published on the hosting repository or challenge portal. For datasets, also note a concise short name (<= 40 chars).
+      placeholder: "University of Pennsylvania Glioblastoma (UPENN-GBM) | Short: UPENN-GBM"
+    validations:
+      required: true
+
+  - type: input
+    id: record-id
+    attributes:
+      label: Suggested Record ID (kebab-case slug)
+      description: Optional globally unique lowercase slug matching `^[a-z0-9]+(?:-[a-z0-9]+)*$` (2–64 chars).
+      placeholder: "upenn-gbm"
+    validations:
+      required: false
+
+  - type: input
+    id: release-year
+    attributes:
+      label: Release Year or Years Active
+      description: Four-digit release year (`YYYY`) for datasets/models, or active span (`YYYY`, `YYYY–YYYY`, or `YYYY–Present`) for challenges.
+      placeholder: "2024 (or 2012–Present for recurring challenges)"
+    validations:
+      required: true
+
+  - type: input
+    id: primary-url
+    attributes:
+      label: Official Resource URL (HTTPS)
+      description: Verified `https://` URL to the dataset landing page, source repository (`repoUrl`), or challenge leaderboard.
+      placeholder: "https://www.cancerimagingarchive.net/collection/upenn-gbm/"
+    validations:
+      required: true
+
+  - type: input
+    id: paper-url
+    attributes:
+      label: Primary Publication / Preprint URL (optional HTTPS)
+      description: Verified `https://` link to the peer-reviewed descriptor paper, DOI resolver, or preprint.
+      placeholder: "https://doi.org/10.1038/s41597-022-01560-7"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: pathologies
+    attributes:
+      label: Pathologies (Controlled Vocabulary)
+      description: Select one or more controlled pathology categories (`schemas/registry-schema.json#vocabularies.pathologies`). Use `Multi-Pathology` for general-purpose frameworks or viewers.
+      multiple: true
+      options:
+        - Glioma / GBM
+        - Brain Metastases
+        - Meningioma
+        - Pituitary & Sellar
+        - Pediatric Tumors
+        - Skull Base / Schwannoma
+        - Stroke & ICH
+        - Aneurysm & Vascular
+        - Epilepsy
+        - Neurodegenerative
+        - Neurotrauma / TBI
+        - Spine
+        - Healthy / Normative
+        - Multi-Pathology
+    validations:
+      required: true
+
+  - type: dropdown
+    id: modalities
+    attributes:
+      label: Modalities (Controlled Vocabulary)
+      description: Select all public data modalities included or supported (`schemas/registry-schema.json#vocabularies.modalities`).
+      multiple: true
+      options:
+        - Structural MRI
+        - Diffusion MRI / DTI
+        - Perfusion MRI
+        - fMRI
+        - CT / CTA
+        - MRA / DSA
+        - PET / Nuclear
+        - Intra-Op Ultrasound
+        - Surgical Video
+        - Optical / Fluorescence
+        - Histopathology / WSI
+        - Electrophysiology
+        - Genomics / Omics
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clinical-phases
+    attributes:
+      label: Clinical Phases (Datasets only)
+      description: Select perioperative or longitudinal timepoints captured in the public cohort. Leave blank for Models or Challenges.
+      multiple: true
+      options:
+        - Pre-Op
+        - Intra-Op
+        - Early Post-Op
+        - Longitudinal
+        - Pathology/Ex-Vivo
+    validations:
+      required: false
+
+  - type: dropdown
+    id: tasks
+    attributes:
+      label: Supported AI / Benchmark Tasks (Datasets & Challenges)
+      description: Select primary clinical AI, neuroimaging, or surgical vision tasks.
+      multiple: true
+      options:
+        - Tumor Segmentation
+        - Anatomy / Structure Segmentation
+        - Vessel / Vascular Segmentation
+        - Lesion / Hemorrhage Detection
+        - Resection Cavity Segmentation
+        - Image Registration / Brain Shift
+        - Image Synthesis / Inpainting
+        - Super-Resolution / Reconstruction
+        - Skull Stripping / Preprocessing
+        - Survival / Outcome Prediction
+        - Molecular / Radiogenomic Prediction
+        - Tumor Classification / Grading
+        - Surgical Phase Recognition
+        - Instrument / Tool Tracking
+        - 3D Scene Reconstruction / Navigation
+        - Pathology / Tissue Classification
+        - Seizure / Functional Mapping
+        - Foundation Representation / Self-Supervised
+    validations:
+      required: false
+
+  - type: dropdown
+    id: access-tier
+    attributes:
+      label: Access Tier (Datasets only)
+      description: Governance barrier required to obtain the dataset files.
+      options:
+        - Open Access
+        - Registration Required
+        - Controlled DUA
+        - N/A (Model or Challenge)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Hosting Platform
+      description: Primary repository hosting the dataset, code, or challenge leaderboard.
+      options:
+        - TCIA
+        - Synapse
+        - Grand Challenge
+        - Codabench
+        - Kaggle
+        - OSF
+        - Hugging Face
+        - Figshare
+        - GitHub
+        - Institutional Portal
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: License / Data Use Terms
+      description: SPDX or repository license string (e.g., `CC BY 4.0`, `CC BY-NC 4.0`, `Apache-2.0`, `MIT`, `Custom Academic DUA`).
+      placeholder: "CC BY 4.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: type-specific-metadata
+    attributes:
+      label: Resource-Specific Metadata
+      description: |
+        Provide the details matching your chosen Resource Type:
+        - **Dataset**: Cohort size (integer patients or `null`) & display label (e.g., `630 patients (671 scans)`), annotation types, and molecular markers (`IDH`, `MGMT`, `1p/19q`, etc., if applicable).
+        - **Model / Toolkit**: Category (`Foundation Model`, `Segmentation Framework`, `Surgical Vision`, or `Neuroimaging Viewer / Clinical Plugin`), architecture/engine, runtime framework, and pretrained weights availability + `weightsUrl` (if hosted separately).
+        - **Challenge / Benchmark**: Organizing society/consortium, status (`Active / Recurring` or `Completed (Open Benchmark)`), and official quantitative metrics (`Dice`, `HD95`, `TRE`, etc.).
+      placeholder: |
+        Cohort Size: 630 patients (671 scans)
+        Annotations: Voxel-wise Tumor Sub-regions, Clinical Outcomes / Survival, Molecular / Genetic Labels
+        Molecular Markers: IDH, MGMT, WHO Grade
+    validations:
+      required: true
+
+  - type: textarea
+    id: citation
+    attributes:
+      label: Primary Citation Metadata
+      description: Provide bibliographic details for BibTeX, RIS, and APA 7th export. List authors in BibTeX `"Last, First and Last, First"` format (append `and others` if truncating a consortium). Provide bare DOI without `https://doi.org/` (or `null` if none exists).
+      placeholder: |
+        Authors: Bakas, Spyridon and Sako, Chiharu and Akbari, Hamed and others
+        Title: The University of Pennsylvania glioblastoma (UPENN-GBM) cohort: advanced MRI, clinical, genomics, & radiomics
+        Venue: Scientific Data
+        Year: 2022
+        DOI: 10.1038/s41597-022-01560-7
+        BibTeX Key: bakas2022upenngbm
+    validations:
+      required: true
+
+  - type: textarea
+    id: highlights-and-limitations
+    attributes:
+      label: Highlights & Known Limitations
+      description: |
+        1. **Highlights** (all types, 20–500 chars): 1–2 sentences summarizing unique clinical and technical value.
+        2. **Limitations & Biases** (required for Datasets, 15–500 chars): Honest note on single-center/geographic bias, missing perioperative phases, label noise, or scanner/protocol heterogeneity.
+      placeholder: |
+        Highlights: Multi-parametric structural, diffusion, and perfusion MRI paired with clinical outcomes and molecular biomarkers for adult glioblastoma.
+        Limitations: Single-center US cohort; automated segmentations require manual QA on a subset of cases.
+    validations:
+      required: true
+
+  - type: textarea
+    id: snippet
+    attributes:
+      label: Starter Fetch or Install Snippet (Datasets & Models)
+      description: Copy-paste CLI, Python, Docker, or plugin command to download the dataset (`fetchSnippet`) or install/run the model (`installSnippet`).
+      placeholder: |
+        pip install tcia_utils
+        python -c "from tcia_utils import nbia; nbia.downloadSeries(nbia.getSeries('UPENN-GBM')[:5], path='./data/upenn-gbm')"
+      render: bash
+    validations:
+      required: false
+
+  - type: textarea
+    id: validated-json
+    attributes:
+      label: Pre-Validated JSON Record (Optional — from In-App PR Builder)
+      description: If you used the OpenNeuroAtlas **Submit via PR** builder, paste the validated JSON object here for accelerated review.
+      render: json
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Scientific Integrity & Governance Checklist
+      description: Confirm these open-science requirements before submitting.
+      options:
+        - label: All URLs use `https://` and resolve to official, publicly reachable pages (no private links, localhost, or placeholder domains).
+          required: true
+        - label: This resource is legitimately released (Open Access, Registration Required, or documented academic DUA) and contains no unconsented PHI or restricted patient data.
+          required: true
+        - label: For datasets, I have included an honest note describing cohort limitations, biases, or annotation caveats.
+          required: false
+        - label: I generated and validated a JSON block using the in-app **Submit via PR** builder.
+          required: false

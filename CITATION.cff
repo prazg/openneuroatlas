@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use OpenNeuroAtlas in your research, systematic review, or software workflow, please cite it using the metadata below."
+title: "OpenNeuroAtlas: A Living Open-Science Registry for Neurosurgery, Neuroimaging, Neuro-Oncology, and Surgical AI"
+type: software
+version: "1.0.0"
+date-released: "2026-11-19"
+license: MIT
+repository-code: "https://github.com/openneuroatlas/openneuroatlas"
+url: "https://openneuroatlas.github.io/openneuroatlas/"
+abstract: >-
+  OpenNeuroAtlas is a zero-build, PR-extensible GitHub Pages open-science
+  registry and gap-analysis observatory cataloging open-access datasets,
+  foundation models and clinical toolkits, and MICCAI / open benchmarks across
+  neurosurgery, neuroimaging, neuro-oncology, and surgical AI. Governed by a
+  single machine-readable JSON schema, it provides interactive Modality x
+  Pathology coverage heatmaps, automated open-science gap detection,
+  side-by-side cohort comparison, reproducible platform fetch snippets, and
+  instant BibTeX, RIS, APA 7th, Markdown, and CSV export.
+authors:
+  - name: "OpenNeuroAtlas Contributors"
+keywords:
+  - open-science
+  - neurosurgery
+  - neuroimaging
+  - neuro-oncology
+  - surgical-ai
+  - medical-imaging
+  - datasets
+  - foundation-models
+  - miccai-benchmarks
+  - metadata-registry
+  - reproducible-research

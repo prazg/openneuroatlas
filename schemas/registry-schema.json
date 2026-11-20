@@ -1,0 +1,1213 @@
+{
+  "schemaVersion": "1.0.0",
+  "title": "OpenNeuroAtlas Registry Schema",
+  "description": "Machine-readable single source of truth defining controlled vocabularies, file envelopes, record field rules, cross-record integrity constraints, and PR Builder form metadata for OpenNeuroAtlas. Consumed directly by tests/validate_registry.py (Python 3.12 stdlib) and js/prBuilder.js + js/registryEngine.js + js/analyticsCharts.js in the browser.",
+  "fileEnvelope": {
+    "required": [
+      "schemaVersion",
+      "recordType",
+      "lastUpdated",
+      "records"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "schemaVersion": {
+        "type": "string",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$",
+        "description": "Semantic version matching schemas/registry-schema.json."
+      },
+      "recordType": {
+        "type": "string",
+        "enum": [
+          "datasets",
+          "models",
+          "challenges"
+        ],
+        "description": "Collection identifier matching the filename in data/<recordType>.json."
+      },
+      "lastUpdated": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "description": "ISO 8601 date (YYYY-MM-DD) of the most recent registry update."
+      },
+      "records": {
+        "type": "array",
+        "minItems": 0,
+        "description": "Ordered array of validated registry entries."
+      }
+    }
+  },
+  "vocabularies": {
+    "pathologies": [
+      "Glioma / GBM",
+      "Brain Metastases",
+      "Meningioma",
+      "Pituitary & Sellar",
+      "Pediatric Tumors",
+      "Skull Base / Schwannoma",
+      "Stroke & ICH",
+      "Aneurysm & Vascular",
+      "Epilepsy",
+      "Neurodegenerative",
+      "Neurotrauma / TBI",
+      "Spine",
+      "Healthy / Normative",
+      "Multi-Pathology"
+    ],
+    "modalities": [
+      "Structural MRI",
+      "Diffusion MRI / DTI",
+      "Perfusion MRI",
+      "fMRI",
+      "CT / CTA",
+      "MRA / DSA",
+      "PET / Nuclear",
+      "Intra-Op Ultrasound",
+      "Surgical Video",
+      "Optical / Fluorescence",
+      "Histopathology / WSI",
+      "Electrophysiology",
+      "Genomics / Omics"
+    ],
+    "clinicalPhases": [
+      "Pre-Op",
+      "Intra-Op",
+      "Early Post-Op",
+      "Longitudinal",
+      "Pathology/Ex-Vivo"
+    ],
+    "tasks": [
+      "Tumor Segmentation",
+      "Anatomy / Structure Segmentation",
+      "Vessel / Vascular Segmentation",
+      "Lesion / Hemorrhage Detection",
+      "Resection Cavity Segmentation",
+      "Image Registration / Brain Shift",
+      "Image Synthesis / Inpainting",
+      "Super-Resolution / Reconstruction",
+      "Skull Stripping / Preprocessing",
+      "Survival / Outcome Prediction",
+      "Molecular / Radiogenomic Prediction",
+      "Tumor Classification / Grading",
+      "Surgical Phase Recognition",
+      "Instrument / Tool Tracking",
+      "3D Scene Reconstruction / Navigation",
+      "Pathology / Tissue Classification",
+      "Seizure / Functional Mapping",
+      "Foundation Representation / Self-Supervised"
+    ],
+    "annotations": [
+      "Voxel-wise Tumor Sub-regions",
+      "Voxel-wise Lesion / Infarct Masks",
+      "Voxel-wise Anatomy / Parcellation",
+      "Vessel / Centerline Masks",
+      "Bounding Boxes / Detection",
+      "Anatomical Landmarks / Fiducials",
+      "Surgical Phase / Step Timestamps",
+      "Instrument / Anatomy Polygons",
+      "Clinical Outcomes / Survival",
+      "Molecular / Genetic Labels",
+      "Histopathology / Region Labels",
+      "Radiomics / Tabular Features",
+      "Clinical Reports / Structured EHR",
+      "Unlabeled / Self-Supervised"
+    ],
+    "molecularMarkers": [
+      "IDH",
+      "MGMT",
+      "1p/19q",
+      "ATRX",
+      "TERT",
+      "EGFR",
+      "TP53",
+      "BRAF",
+      "H3K27M",
+      "CDKN2A/B",
+      "Ki-67",
+      "WHO Grade",
+      "DNA Methylation",
+      "RNA-Seq",
+      "WES / WGS"
+    ],
+    "accessTiers": [
+      "Open Access",
+      "Registration Required",
+      "Controlled DUA"
+    ],
+    "datasetPlatforms": [
+      "TCIA",
+      "Synapse",
+      "OSF",
+      "Hugging Face",
+      "Figshare",
+      "GitHub",
+      "Institutional Portal"
+    ],
+    "challengePlatforms": [
+      "Synapse",
+      "Grand Challenge",
+      "Codabench",
+      "Kaggle",
+      "TCIA",
+      "OSF",
+      "Hugging Face",
+      "GitHub",
+      "Institutional Portal"
+    ],
+    "modelCategories": [
+      "Foundation Model",
+      "Segmentation Framework",
+      "Surgical Vision",
+      "Neuroimaging Viewer / Clinical Plugin"
+    ],
+    "challengeStatuses": [
+      "Active / Recurring",
+      "Completed (Open Benchmark)"
+    ],
+    "metrics": [
+      "Dice",
+      "Lesion-wise Dice",
+      "HD95",
+      "Lesion-wise HD95",
+      "NSD",
+      "clDice",
+      "Betti Error",
+      "IoU",
+      "TRE",
+      "mAP",
+      "F1",
+      "AUROC",
+      "Accuracy / Balanced Accuracy",
+      "Sensitivity / Specificity",
+      "C-Index",
+      "MAE / RMSE",
+      "PSNR / SSIM",
+      "Runtime / Efficiency"
+    ]
+  },
+  "suggestions": {
+    "dataLicenses": [
+      "CC BY 4.0",
+      "CC BY 3.0",
+      "CC BY-NC 4.0",
+      "CC BY-NC-SA 4.0",
+      "CC BY-SA 4.0",
+      "CC0 1.0",
+      "TCIA Restricted License",
+      "Synapse Terms of Use",
+      "Custom Academic DUA",
+      "MIT",
+      "Apache-2.0"
+    ],
+    "openSourceLicenses": [
+      "Apache-2.0",
+      "MIT",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "GPL-3.0",
+      "LGPL-3.0",
+      "3D Slicer License",
+      "FreeSurfer Software License",
+      "CC BY-NC 4.0",
+      "Non-Commercial Research"
+    ],
+    "frameworks": [
+      "PyTorch",
+      "PyTorch / MONAI",
+      "PyTorch / nnU-Net",
+      "PyTorch / Hugging Face",
+      "TensorFlow / Keras",
+      "FreeSurfer / Python",
+      "3D Slicer",
+      "WebGL2 / JS",
+      "C++ / ITK / VTK",
+      "Docker / Singularity"
+    ],
+    "oncologyPathologies": [
+      "Glioma / GBM",
+      "Brain Metastases",
+      "Meningioma",
+      "Pituitary & Sellar",
+      "Pediatric Tumors",
+      "Skull Base / Schwannoma"
+    ]
+  },
+  "definitions": {
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authors",
+        "title",
+        "venue",
+        "year",
+        "bibtexKey",
+        "doi"
+      ],
+      "properties": {
+        "authors": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 3,
+          "maxLength": 600,
+          "description": "Authors in standard BibTeX 'Last, First and Last, First' format (use 'and others' for truncated consortium lists).",
+          "ui": {
+            "label": "Authors (BibTeX format)",
+            "inputType": "text",
+            "placeholder": "Bakas, Spyridon and Sako, Chiharu and Akbari, Hamed and others",
+            "helpText": "Separate multiple authors with ' and ' in 'Last, First' order so BibTeX, RIS, and APA exporters parse cleanly."
+          }
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 5,
+          "maxLength": 350,
+          "description": "Primary publication, preprint, or dataset title.",
+          "ui": {
+            "label": "Publication / Dataset Title",
+            "inputType": "text",
+            "placeholder": "The University of Pennsylvania glioblastoma (UPENN-GBM) cohort...",
+            "helpText": "Canonical title of the primary reference paper or dataset release."
+          }
+        },
+        "venue": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 180,
+          "description": "Journal name, conference proceedings, preprint server, or repository name.",
+          "ui": {
+            "label": "Venue / Journal",
+            "inputType": "text",
+            "placeholder": "Scientific Data",
+            "helpText": "e.g., Scientific Data, IEEE TMI, Nature Methods, MICCAI, arXiv, GitHub."
+          }
+        },
+        "year": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "minimum": 1990,
+          "maximum": 2035,
+          "description": "Four-digit publication year of the citation.",
+          "ui": {
+            "label": "Citation Year",
+            "inputType": "number",
+            "placeholder": "2022",
+            "helpText": "Four-digit year matching the cited reference."
+          }
+        },
+        "bibtexKey": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{2,63}$",
+          "description": "Unique BibTeX citation key (alphanumeric, underscores, hyphens; starts with a letter).",
+          "ui": {
+            "label": "BibTeX Key",
+            "inputType": "text",
+            "placeholder": "bakas2022upenngbm",
+            "helpText": "Recommended format: <firstauthor><year><shortslug> (no spaces or special symbols)."
+          }
+        },
+        "doi": {
+          "type": "string",
+          "required": true,
+          "nullable": true,
+          "pattern": "^10\\.\\d{4,9}/[-._;()/:A-Za-z0-9]+$",
+          "description": "Bare DOI without 'https://doi.org/' prefix, or null if no DOI exists.",
+          "ui": {
+            "label": "DOI (optional — leave blank for null)",
+            "inputType": "text",
+            "placeholder": "10.1038/s41597-022-01560-7",
+            "helpText": "Enter bare DOI starting with '10.' (do not include https://doi.org/)."
+          }
+        }
+      }
+    }
+  },
+  "recordTypes": {
+    "datasets": {
+      "singular": "dataset",
+      "label": "Dataset",
+      "dataFile": "data/datasets.json",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "shortName",
+        "year",
+        "pathologies",
+        "modalities",
+        "clinicalPhases",
+        "tasks",
+        "cohortSize",
+        "cohortDisplay",
+        "annotations",
+        "molecularMarkers",
+        "accessTier",
+        "license",
+        "platform",
+        "url",
+        "citation",
+        "fetchSnippet",
+        "highlights",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Globally unique lowercase kebab-case slug.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Record ID (slug)",
+            "inputType": "text",
+            "placeholder": "upenn-gbm",
+            "helpText": "Lowercase letters, numbers, and hyphens only (e.g., brats-2023-gli, remind-2023)."
+          }
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 3,
+          "maxLength": 160,
+          "description": "Full official dataset name.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Full Name",
+            "inputType": "text",
+            "placeholder": "University of Pennsylvania Glioblastoma (UPENN-GBM)",
+            "helpText": "Official dataset title as published on the hosting repository."
+          }
+        },
+        "shortName": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 40,
+          "description": "Concise badge/table label.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Short Name",
+            "inputType": "text",
+            "placeholder": "UPENN-GBM",
+            "helpText": "Compact acronym or short display title (<= 40 chars)."
+          }
+        },
+        "year": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "minimum": 1990,
+          "maximum": 2035,
+          "description": "Primary public release year.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Release Year",
+            "inputType": "number",
+            "placeholder": "2022",
+            "helpText": "Year of primary public release or latest major benchmark edition."
+          }
+        },
+        "pathologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "pathologies",
+          "description": "Controlled pathology categories represented in the cohort.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Pathologies",
+            "inputType": "multi-select",
+            "helpText": "Select one or more controlled pathology categories."
+          }
+        },
+        "modalities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "modalities",
+          "description": "Controlled imaging, surgical, pathology, or omics modalities.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Modalities",
+            "inputType": "multi-select",
+            "helpText": "Select all data modalities included in the public release."
+          }
+        },
+        "clinicalPhases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "clinicalPhases",
+          "description": "Perioperative or longitudinal clinical phases captured.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Clinical Phases",
+            "inputType": "multi-select",
+            "helpText": "Capture timepoints: Pre-Op, Intra-Op, Early Post-Op, Longitudinal, Pathology/Ex-Vivo."
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "tasks",
+          "description": "Downstream AI/ML tasks supported by the dataset.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Supported Tasks",
+            "inputType": "multi-select",
+            "helpText": "Select primary clinical AI / neuroimaging tasks."
+          }
+        },
+        "cohortSize": {
+          "type": "integer",
+          "required": true,
+          "nullable": true,
+          "minimum": 1,
+          "maximum": 10000000,
+          "description": "Numeric patient/subject count for sorting and analytics, or null if unreported/non-subject-indexed.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Cohort Size (Numeric Patients, optional)",
+            "inputType": "number",
+            "placeholder": "630",
+            "helpText": "Integer patient/subject count. Leave blank (null) if only video/frame/phantom counts exist."
+          }
+        },
+        "cohortDisplay": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 80,
+          "description": "Human-readable cohort size summary.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Cohort Display Label",
+            "inputType": "text",
+            "placeholder": "630 patients (671 scans)",
+            "helpText": "Concise human-readable scale shown on cards and comparison tables."
+          }
+        },
+        "annotations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "annotations",
+          "description": "Controlled annotation / ground-truth label types.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Annotations & Labels",
+            "inputType": "multi-select",
+            "helpText": "Select all ground-truth mask, landmark, clinical, or unlabeled types."
+          }
+        },
+        "molecularMarkers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 0,
+          "uniqueItems": true,
+          "vocabRef": "molecularMarkers",
+          "description": "Neuro-oncology molecular/genomic markers included (empty array [] if not applicable).",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Molecular Markers (optional)",
+            "inputType": "multi-select",
+            "helpText": "Leave empty for non-oncology cohorts or datasets without molecular biomarkers."
+          }
+        },
+        "accessTier": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "vocabRef": "accessTiers",
+          "description": "Data access governance barrier level.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Access Tier",
+            "inputType": "select",
+            "helpText": "Open Access (direct download), Registration Required (free account/click-through), or Controlled DUA (institutional approval)."
+          }
+        },
+        "license": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 100,
+          "suggestionRef": "dataLicenses",
+          "description": "Data license or terms of use string.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "License / Terms",
+            "inputType": "text",
+            "placeholder": "CC BY 4.0",
+            "helpText": "SPDX or repository license name (e.g., CC BY 4.0, CC BY-NC 4.0, Custom Academic DUA)."
+          }
+        },
+        "platform": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "vocabRef": "datasetPlatforms",
+          "description": "Primary hosting platform.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Hosting Platform",
+            "inputType": "select",
+            "helpText": "Primary repository hosting the downloadable files."
+          }
+        },
+        "url": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Verified HTTPS URL to the official dataset landing page.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Dataset URL (HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://www.cancerimagingarchive.net/collection/upenn-gbm/",
+            "helpText": "Must be a verified https:// URL to the official dataset page."
+          }
+        },
+        "paperUrl": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Optional verified HTTPS URL to the primary publication or preprint.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Paper URL (optional HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://doi.org/10.1038/s41597-022-01560-7",
+            "helpText": "Optional link to the peer-reviewed descriptor paper or preprint."
+          }
+        },
+        "fetchSnippet": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 10,
+          "maxLength": 2000,
+          "description": "Copy-paste CLI or Python starter snippet to download/access the dataset.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Starter Fetch Snippet",
+            "inputType": "code",
+            "placeholder": "pip install tcia_utils\npython -c \"from tcia_utils import nbia; ...\"",
+            "helpText": "Reproducible CLI or Python snippet tailored to the hosting platform."
+          }
+        },
+        "citation": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "objectRef": "citation",
+          "description": "Structured bibliographic metadata for BibTeX, RIS, and APA export.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Primary Citation",
+            "inputType": "citation-group"
+          }
+        },
+        "highlights": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "1–2 sentence clinical and AI summary highlighting unique value.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Clinical & AI Highlights",
+            "inputType": "textarea",
+            "placeholder": "Multi-parametric structural, diffusion, and perfusion MRI paired with clinical outcomes and molecular markers...",
+            "helpText": "Concise 1–2 sentence technical and clinical overview (20–500 chars)."
+          }
+        },
+        "limitations": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 15,
+          "maxLength": 500,
+          "description": "Brief, honest note on cohort biases, missingness, or domain-shift caveats.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Known Limitations & Biases",
+            "inputType": "textarea",
+            "placeholder": "Single-center US cohort; automated segmentations require review on a subset of cases.",
+            "helpText": "Transparent note on geographic bias, missing timepoints, label noise, or protocol heterogeneity."
+          }
+        }
+      }
+    },
+    "models": {
+      "singular": "model",
+      "label": "Model / Toolkit",
+      "dataFile": "data/models.json",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "year",
+        "modalities",
+        "pathologies",
+        "architecture",
+        "weightsAvailable",
+        "openSourceLicense",
+        "framework",
+        "repoUrl",
+        "citation",
+        "installSnippet",
+        "highlights"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Globally unique lowercase kebab-case slug.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Record ID (slug)",
+            "inputType": "text",
+            "placeholder": "nnunet-v2",
+            "helpText": "Lowercase letters, numbers, and hyphens only."
+          }
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 120,
+          "description": "Official model, framework, or clinical plugin name.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Model / Toolkit Name",
+            "inputType": "text",
+            "placeholder": "nnU-Net v2",
+            "helpText": "Canonical public name."
+          }
+        },
+        "category": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "vocabRef": "modelCategories",
+          "description": "Controlled model/toolkit taxonomy category.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Category",
+            "inputType": "select",
+            "helpText": "Primary software or model class."
+          }
+        },
+        "year": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "minimum": 1990,
+          "maximum": 2035,
+          "description": "Initial or flagship release year.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Release Year",
+            "inputType": "number",
+            "placeholder": "2023",
+            "helpText": "Four-digit release or publication year."
+          }
+        },
+        "modalities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "modalities",
+          "description": "Modalities supported by this model or toolkit.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Supported Modalities",
+            "inputType": "multi-select",
+            "helpText": "Select all supported data modalities."
+          }
+        },
+        "pathologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "pathologies",
+          "description": "Pathologies targeted or validated by this model/toolkit.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Target Pathologies",
+            "inputType": "multi-select",
+            "helpText": "Use 'Multi-Pathology' for general-purpose frameworks or viewers."
+          }
+        },
+        "architecture": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 3,
+          "maxLength": 160,
+          "description": "Concise architectural or software engine summary.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Architecture / Engine",
+            "inputType": "text",
+            "placeholder": "Self-configuring 2D/3D Residual Encoder U-Net",
+            "helpText": "Model backbone or rendering/processing architecture."
+          }
+        },
+        "weightsAvailable": {
+          "type": "boolean",
+          "required": true,
+          "nullable": false,
+          "description": "True if pretrained checkpoints/weights are openly downloadable.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Pretrained Weights Available",
+            "inputType": "checkbox",
+            "helpText": "Check if downloadable pretrained weights are provided."
+          }
+        },
+        "openSourceLicense": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 80,
+          "suggestionRef": "openSourceLicenses",
+          "description": "Open-source software or model weights license.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Open-Source License",
+            "inputType": "text",
+            "placeholder": "Apache-2.0",
+            "helpText": "SPDX license identifier (e.g., Apache-2.0, MIT, BSD-3-Clause)."
+          }
+        },
+        "framework": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 80,
+          "suggestionRef": "frameworks",
+          "description": "Primary runtime framework or clinical platform.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Framework / Runtime",
+            "inputType": "text",
+            "placeholder": "PyTorch / MONAI",
+            "helpText": "e.g., PyTorch / MONAI, WebGL2 / JS, 3D Slicer."
+          }
+        },
+        "repoUrl": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Verified HTTPS URL to the public source repository.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Repository URL (HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://github.com/MIC-DKFZ/nnUNet",
+            "helpText": "Official GitHub, GitLab, or source portal URL."
+          }
+        },
+        "weightsUrl": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Optional verified HTTPS URL to pretrained checkpoints (Hugging Face, Zenodo, Releases).",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Weights URL (optional HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://huggingface.co/...",
+            "helpText": "Required only when weights are hosted separately; leave blank if none."
+          }
+        },
+        "paperUrl": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Optional verified HTTPS URL to the primary publication or preprint.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Paper URL (optional HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://doi.org/10.1038/s41592-020-01008-z",
+            "helpText": "Optional link to the methods paper or arXiv preprint."
+          }
+        },
+        "installSnippet": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 10,
+          "maxLength": 2000,
+          "description": "Copyable installation and quick-start snippet.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Install & Quick-Start Snippet",
+            "inputType": "code",
+            "placeholder": "pip install nnunetv2",
+            "helpText": "Shell, Python, Docker, or plugin install commands."
+          }
+        },
+        "citation": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "objectRef": "citation",
+          "description": "Structured bibliographic metadata for BibTeX, RIS, and APA export.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Primary Citation",
+            "inputType": "citation-group"
+          }
+        },
+        "highlights": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "1–2 sentence technical and clinical utility summary.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Highlights",
+            "inputType": "textarea",
+            "placeholder": "Gold-standard self-configuring segmentation pipeline consistently topping MICCAI brain tumor benchmarks.",
+            "helpText": "Concise 1–2 sentence overview (20–500 chars)."
+          }
+        }
+      }
+    },
+    "challenges": {
+      "singular": "challenge",
+      "label": "Challenge / Benchmark",
+      "dataFile": "data/challenges.json",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "organizer",
+        "yearsActive",
+        "status",
+        "modalities",
+        "pathologies",
+        "tasks",
+        "metrics",
+        "platform",
+        "url",
+        "citation",
+        "highlights"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 64,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Globally unique lowercase kebab-case slug.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Record ID (slug)",
+            "inputType": "text",
+            "placeholder": "brats-challenge",
+            "helpText": "Lowercase letters, numbers, and hyphens only."
+          }
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 3,
+          "maxLength": 160,
+          "description": "Official challenge or benchmark name.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Challenge / Benchmark Name",
+            "inputType": "text",
+            "placeholder": "BraTS (Brain Tumor Segmentation Challenge)",
+            "helpText": "Official MICCAI or open benchmark title."
+          }
+        },
+        "organizer": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 2,
+          "maxLength": 140,
+          "description": "Organizing society, consortium, or academic group.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Organizer / Consortium",
+            "inputType": "text",
+            "placeholder": "MICCAI / RSNA / ASNR / BraTS Consortium",
+            "helpText": "Lead societies or institutions running the benchmark."
+          }
+        },
+        "yearsActive": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "pattern": "^\\d{4}(?:[–-](?:\\d{4}|Present)|(?:,\\s*\\d{4})+)?$",
+          "description": "Active span starting with a 4-digit year (e.g., '2012–Present', '2021–2024', '2023').",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Years Active",
+            "inputType": "text",
+            "placeholder": "2012–Present",
+            "helpText": "Format: YYYY, YYYY–YYYY, YYYY–Present, or comma-separated years (e.g., 2018, 2020, 2022)."
+          }
+        },
+        "status": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "vocabRef": "challengeStatuses",
+          "description": "Whether the benchmark recurs annually or is a completed open leaderboard.",
+          "ui": {
+            "section": "Core Identity",
+            "label": "Benchmark Status",
+            "inputType": "select",
+            "helpText": "Active / Recurring vs Completed (Open Benchmark)."
+          }
+        },
+        "modalities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "modalities",
+          "description": "Modalities evaluated in the benchmark.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Modalities",
+            "inputType": "multi-select",
+            "helpText": "Select all modalities evaluated."
+          }
+        },
+        "pathologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "pathologies",
+          "description": "Pathologies evaluated in the benchmark.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Pathologies",
+            "inputType": "multi-select",
+            "helpText": "Select all pathologies covered."
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "tasks",
+          "description": "Evaluation tasks defined by the challenge.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Benchmark Tasks",
+            "inputType": "multi-select",
+            "helpText": "Select primary benchmark evaluation tasks."
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "nullable": false,
+          "minItems": 1,
+          "uniqueItems": true,
+          "vocabRef": "metrics",
+          "description": "Official quantitative leaderboard metrics.",
+          "ui": {
+            "section": "Clinical & Technical Scope",
+            "label": "Evaluation Metrics",
+            "inputType": "multi-select",
+            "helpText": "Select official ranking metrics (e.g., Dice, HD95, TRE)."
+          }
+        },
+        "platform": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "vocabRef": "challengePlatforms",
+          "description": "Platform hosting the challenge submission and leaderboard.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Benchmark Platform",
+            "inputType": "select",
+            "helpText": "Primary submission/leaderboard host (e.g., Synapse, Grand Challenge, Codabench)."
+          }
+        },
+        "url": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Verified HTTPS URL to the official challenge website or leaderboard.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Challenge URL (HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://www.synapse.org/brats",
+            "helpText": "Official challenge portal or Grand Challenge page."
+          }
+        },
+        "paperUrl": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "format": "https-url",
+          "pattern": "^https://[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?::\\d+)?(?:[/?#][^\\s]*)?$",
+          "description": "Optional verified HTTPS URL to the benchmark summary paper.",
+          "ui": {
+            "section": "Access & Code",
+            "label": "Summary Paper URL (optional HTTPS)",
+            "inputType": "url",
+            "placeholder": "https://doi.org/10.1109/TMI.2014.2377694",
+            "helpText": "Optional link to the challenge design or results paper."
+          }
+        },
+        "citation": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "objectRef": "citation",
+          "description": "Structured bibliographic metadata for BibTeX, RIS, and APA export.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Primary Citation",
+            "inputType": "citation-group"
+          }
+        },
+        "highlights": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "1–2 sentence benchmark significance and leaderboard summary.",
+          "ui": {
+            "section": "Citation & Notes",
+            "label": "Highlights",
+            "inputType": "textarea",
+            "placeholder": "Flagship annual MICCAI neuro-oncology benchmark spanning adult glioma, metastases, meningioma, pediatric, and post-op cohorts.",
+            "helpText": "Concise 1–2 sentence summary (20–500 chars)."
+          }
+        }
+      }
+    }
+  },
+  "integrityRules": {
+    "uniqueIdPerCollection": true,
+    "uniqueIdGlobally": true,
+    "uniqueBibtexKeyPerCollection": true,
+    "requireHttpsUrls": true,
+    "forbiddenUrlHosts": [
+      "localhost",
+      "127.0.0.1",
+      "0.0.0.0",
+      "example.com",
+      "example.org",
+      "placeholder.com"
+    ],
+    "weightsUrlRequiresWeightsAvailable": true,
+    "enforceEnvelopeRecordTypeMatchesFilename": true,
+    "enforceSchemaVersionMatch": true
+  }
+}

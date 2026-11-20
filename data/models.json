@@ -1,0 +1,473 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordType": "models",
+  "lastUpdated": "2026-11-19",
+  "records": [
+    {
+      "id": "brainsegfounder",
+      "name": "BrainSegFounder",
+      "category": "Foundation Model",
+      "year": 2024,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Stroke & ICH",
+        "Healthy / Normative",
+        "Multi-Pathology"
+      ],
+      "architecture": "3D Swin UNETR with dual-stage self-supervised pretraining (masked volume inpainting + contrastive)",
+      "weightsAvailable": true,
+      "openSourceLicense": "GPL-3.0 (code); UK Biobank MTA (weights)",
+      "framework": "PyTorch / MONAI",
+      "repoUrl": "https://github.com/lab-smile/BrainSegFounder",
+      "weightsUrl": "https://huggingface.co/smilelab/BrainSegFounder",
+      "paperUrl": "https://doi.org/10.1016/j.media.2024.103301",
+      "citation": {
+        "authors": "Cox, Joseph and Liu, Peng and Stolte, Skylar E. and Yang, Yunchao and Liu, Kang and See, Kyle B. and Ju, Huiwen and Fang, Ruogu",
+        "title": "BrainSegFounder: Towards 3D foundation models for neuroimage segmentation",
+        "venue": "Medical Image Analysis",
+        "year": 2024,
+        "bibtexKey": "cox2024brainsegfounder",
+        "doi": "10.1016/j.media.2024.103301"
+      },
+      "installSnippet": "git clone https://github.com/lab-smile/BrainSegFounder.git\ncd BrainSegFounder\npip install torch monai nibabel huggingface_hub\n# Request gated checkpoint access at https://huggingface.co/smilelab/BrainSegFounder (UK Biobank MTA)",
+      "highlights": "3D Swin UNETR foundation model for brain MRI using dual-stage self-supervised pretraining on >41,000 healthy UK Biobank scans followed by multi-modal BraTS tumor adaptation, delivering data-efficient glioma and stroke segmentation."
+    },
+    {
+      "id": "fastglioma",
+      "name": "FastGlioma",
+      "category": "Surgical Vision",
+      "year": 2025,
+      "modalities": [
+        "Optical / Fluorescence",
+        "Histopathology / WSI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Pediatric Tumors",
+        "Multi-Pathology"
+      ],
+      "architecture": "ResNet-34 patch tokenizer/encoder (HiDisc) paired with a Vision Transformer whole-slide encoder (VICReg + ordinal metric learning)",
+      "weightsAvailable": true,
+      "openSourceLicense": "MIT (code); CC BY-NC-SA 4.0 (weights)",
+      "framework": "PyTorch / Hugging Face",
+      "repoUrl": "https://github.com/MLNeurosurg/fastglioma",
+      "weightsUrl": "https://huggingface.co/mlinslab/fastglioma",
+      "paperUrl": "https://doi.org/10.1038/s41586-024-08169-3",
+      "citation": {
+        "authors": "Kondepudi, Akhil and Pekmezci, Melike and Hou, Xinhai and Scotford, Katie and Jiang, Cheng and Rao, Akshay and Harake, Edward S. and Hollon, Todd and others",
+        "title": "Foundation models for fast, label-free detection of glioma infiltration",
+        "venue": "Nature",
+        "year": 2025,
+        "bibtexKey": "kondepudi2025fastglioma",
+        "doi": "10.1038/s41586-024-08169-3"
+      },
+      "installSnippet": "git clone https://github.com/MLNeurosurg/fastglioma.git\ncd fastglioma\npip install -e .\nhuggingface-cli download mlinslab/fastglioma --local-dir ./checkpoints/fastglioma",
+      "highlights": "Intraoperative visual foundation model trained on >4 million Stimulated Raman Histology (SRH) patches that quantifies microscopic glioma infiltration in under 10 seconds without staining, outperforming fluorescence- and MRI-guided margins."
+    },
+    {
+      "id": "brainfound",
+      "name": "BrainFound",
+      "category": "Foundation Model",
+      "year": 2025,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Stroke & ICH",
+        "Neurodegenerative",
+        "Healthy / Normative",
+        "Multi-Pathology"
+      ],
+      "architecture": "Volumetric 3D adaptation of DINOv2 Vision Transformer processing axial MRI slice sequences",
+      "weightsAvailable": false,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "PyTorch",
+      "repoUrl": "https://github.com/Moona-Mazher/BrainFound",
+      "weightsUrl": null,
+      "paperUrl": "https://arxiv.org/abs/2510.23415",
+      "citation": {
+        "authors": "Mazher, Moona and Parker, Geoff J. M. and Alexander, Daniel C.",
+        "title": "Towards Generalisable Foundation Models for Brain MRI",
+        "venue": "arXiv",
+        "year": 2025,
+        "bibtexKey": "mazher2025brainfound",
+        "doi": "10.48550/arXiv.2510.23415"
+      },
+      "installSnippet": "git clone https://github.com/Moona-Mazher/BrainFound.git\ncd BrainFound\npip install torch torchvision timm monai nibabel",
+      "highlights": "Self-supervised 3D brain MRI foundation model extending DINOv2 to volumetric multi-contrast scans (T1w, T2w, FLAIR) for generalizable cross-site neuro-oncology, stroke lesion, and neurodegeneration representation learning."
+    },
+    {
+      "id": "neurofm",
+      "name": "NeuroFM",
+      "category": "Foundation Model",
+      "year": 2026,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Healthy / Normative",
+        "Neurodegenerative",
+        "Multi-Pathology"
+      ],
+      "architecture": "Lightweight 3D CNN foundation encoder (Small 484K / Medium 6.5M / Large 10.8M params) trained on synthetic T1w MRI",
+      "weightsAvailable": true,
+      "openSourceLicense": "CC BY-NC-SA 4.0",
+      "framework": "TensorFlow / Keras",
+      "repoUrl": "https://github.com/rockNroll87q/NeuroFM",
+      "weightsUrl": "https://huggingface.co/NeuroAI-UofG/NeuroFM",
+      "paperUrl": "https://doi.org/10.64898/2026.03.27.26349489",
+      "citation": {
+        "authors": "Dibble, Austin and Dalby, Connor and Sevegnani, Michele and Fracasso, Alessio and Lyall, Donald M. and Harvey, Monika and Svanera, Michele",
+        "title": "NeuroFM: Toward Precision Neuroimaging with Foundation Models for Individualized Brain Health Estimation",
+        "venue": "medRxiv",
+        "year": 2026,
+        "bibtexKey": "dibble2026neurofm",
+        "doi": "10.64898/2026.03.27.26349489"
+      },
+      "installSnippet": "pip install git+https://github.com/rockNroll87q/NeuroFM.git\nhuggingface-cli download NeuroAI-UofG/NeuroFM --local-dir ./weights/neurofm",
+      "highlights": "Disease-naive, lightweight structural T1w MRI foundation model (484K–10.8M parameters, CPU-friendly) trained on 100,000 synthetic healthy brain volumes to yield compact morphometric embeddings for brain age and individualized brain health profiling."
+    },
+    {
+      "id": "nnunet-v2",
+      "name": "nnU-Net v2",
+      "category": "Segmentation Framework",
+      "year": 2023,
+      "modalities": [
+        "Structural MRI",
+        "CT / CTA",
+        "PET / Nuclear",
+        "Intra-Op Ultrasound"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma",
+        "Stroke & ICH",
+        "Multi-Pathology"
+      ],
+      "architecture": "Self-configuring 2D/3D full-resolution and cascaded U-Net with Residual Encoder presets",
+      "weightsAvailable": false,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "PyTorch / nnU-Net",
+      "repoUrl": "https://github.com/MIC-DKFZ/nnUNet",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.1038/s41592-020-01008-z",
+      "citation": {
+        "authors": "Isensee, Fabian and Jaeger, Paul F. and Kohl, Simon A. A. and Petersen, Jens and Maier-Hein, Klaus H.",
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "venue": "Nature Methods",
+        "year": 2021,
+        "bibtexKey": "isensee2021nnunet",
+        "doi": "10.1038/s41592-020-01008-z"
+      },
+      "installSnippet": "pip install nnunetv2\nnnUNetv2_plan_and_preprocess -d DATASET_ID --verify_dataset_integrity\nnnUNetv2_train DATASET_ID 3d_fullres 0",
+      "highlights": "Gold-standard self-configuring biomedical segmentation framework that automatically derives preprocessing, U-Net topology, and training schedules from dataset fingerprints, repeatedly serving as the winning backbone across BraTS, FeTS, and ISLES."
+    },
+    {
+      "id": "monai",
+      "name": "MONAI & MONAI Model Zoo",
+      "category": "Segmentation Framework",
+      "year": 2022,
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "CT / CTA",
+        "PET / Nuclear",
+        "Histopathology / WSI",
+        "Intra-Op Ultrasound"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Stroke & ICH",
+        "Multi-Pathology"
+      ],
+      "architecture": "Modular PyTorch medical imaging ecosystem (Swin UNETR, SegResNet, UNETR, Auto3DSeg, Bundle Zoo)",
+      "weightsAvailable": true,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "PyTorch / MONAI",
+      "repoUrl": "https://github.com/Project-MONAI/MONAI",
+      "weightsUrl": "https://github.com/Project-MONAI/model-zoo",
+      "paperUrl": "https://arxiv.org/abs/2211.02701",
+      "citation": {
+        "authors": "Cardoso, M. Jorge and Li, Wenqi and Brown, Richard and Ma, Nic and Kerfoot, Eric and Wang, Yiheng and Murrey, Benjamin and Myronenko, Andriy and Feng, Andrew and others",
+        "title": "MONAI: An open-source framework for deep learning in healthcare",
+        "venue": "arXiv",
+        "year": 2022,
+        "bibtexKey": "cardoso2022monai",
+        "doi": "10.48550/arXiv.2211.02701"
+      },
+      "installSnippet": "pip install \"monai[nibabel,tqdm]\"\npython -m monai.bundle download --name brats_mri_segmentation --bundle_dir ./bundles",
+      "highlights": "PyTorch-based open-source medical imaging framework providing domain-specific 3D transforms, Auto3DSeg pipelines, Swin UNETR and SegResNet architectures, and an open Model Zoo with ready-to-run BraTS neuro-oncology bundles."
+    },
+    {
+      "id": "hd-bet",
+      "name": "HD-BET",
+      "category": "Segmentation Framework",
+      "year": 2019,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma",
+        "Healthy / Normative",
+        "Multi-Pathology"
+      ],
+      "architecture": "5-fold ensemble of 3D U-Nets trained across multi-institutional pathological brain MRIs",
+      "weightsAvailable": true,
+      "openSourceLicense": "Apache-2.0 (code); CC BY 4.0 (weights)",
+      "framework": "PyTorch",
+      "repoUrl": "https://github.com/MIC-DKFZ/HD-BET",
+      "weightsUrl": "https://zenodo.org/records/2540695",
+      "paperUrl": "https://doi.org/10.1002/hbm.24750",
+      "citation": {
+        "authors": "Isensee, Fabian and Schell, Marianne and Tursunova, Irada and Brugnara, Gianluca and Bonekamp, David and Neuberger, Ulf and Wick, Antje and Schlemmer, Heinz-Peter and Heiland, Sabine and Wick, Wolfgang and Bendszus, Martin and Maier-Hein, Klaus H. and Kickingereder, Philipp",
+        "title": "Automated brain extraction of multisequence MRI using artificial neural networks",
+        "venue": "Human Brain Mapping",
+        "year": 2019,
+        "bibtexKey": "isensee2019hdbet",
+        "doi": "10.1002/hbm.24750"
+      },
+      "installSnippet": "pip install hd-bet\nhd-bet -i input_t1ce.nii.gz -o output_brain.nii.gz",
+      "highlights": "De facto neuro-oncology skull-stripping standard trained on multi-sequence pathological MRIs (T1, T1ce, T2, FLAIR), reliably preserving peripheral brain tumors, resection cavities, and post-treatment anatomy without over-stripping."
+    },
+    {
+      "id": "synthseg",
+      "name": "SynthSeg",
+      "category": "Segmentation Framework",
+      "year": 2023,
+      "modalities": [
+        "Structural MRI",
+        "CT / CTA"
+      ],
+      "pathologies": [
+        "Healthy / Normative",
+        "Neurodegenerative",
+        "Epilepsy",
+        "Stroke & ICH",
+        "Multi-Pathology"
+      ],
+      "architecture": "3D U-Net trained purely on synthetic domain-randomized scans with arbitrary contrast and resolution",
+      "weightsAvailable": true,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "TensorFlow / Keras",
+      "repoUrl": "https://github.com/BBillot/SynthSeg",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.1016/j.media.2023.102789",
+      "citation": {
+        "authors": "Billot, Benjamin and Greve, Douglas N. and Puonti, Oula and Thielscher, Axel and Van Leemput, Koen and Fischl, Bruce and Dalca, Adrian V. and Iglesias, Juan Eugenio",
+        "title": "SynthSeg: Segmentation of brain MRI scans of any contrast and resolution without retraining",
+        "venue": "Medical Image Analysis",
+        "year": 2023,
+        "bibtexKey": "billot2023synthseg",
+        "doi": "10.1016/j.media.2023.102789"
+      },
+      "installSnippet": "git clone https://github.com/BBillot/SynthSeg.git\n# Or run directly via FreeSurfer >= 7.3.2 (bundles pretrained checkpoints):\nmri_synthseg --i input_scan.nii.gz --o output_parc.nii.gz --robust --parc",
+      "highlights": "Contrast- and resolution-agnostic whole-brain parcellation CNN trained entirely on synthetic domain-randomized images, enabling zero-shot segmentation of heterogeneous routine clinical thick-slice MRI and CT scans without retraining."
+    },
+    {
+      "id": "brats-toolkit",
+      "name": "BraTS-Toolkit",
+      "category": "Segmentation Framework",
+      "year": 2020,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "architecture": "Containerized preprocessing, multi-algorithm BraTS segmentation orchestrator, and SIMPLE/MAV fusionator",
+      "weightsAvailable": true,
+      "openSourceLicense": "AGPL-3.0",
+      "framework": "Docker / Singularity",
+      "repoUrl": "https://github.com/neuronflow/BraTS-Toolkit",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.3389/fnins.2020.00125",
+      "citation": {
+        "authors": "Kofler, Florian and Berger, Christoph and Waldmannstetter, Diana and Lipkova, Jana and Ezhov, Ivan and Tetteh, Giles and Kirschke, Jan and Zimmer, Claus and Wiestler, Benedikt and Menze, Bjoern H.",
+        "title": "BraTS Toolkit: Translating BraTS Brain Tumor Segmentation Algorithms Into Clinical and Scientific Practice",
+        "venue": "Frontiers in Neuroscience",
+        "year": 2020,
+        "bibtexKey": "kofler2020bratstoolkit",
+        "doi": "10.3389/fnins.2020.00125"
+      },
+      "installSnippet": "pip install BraTS-Toolkit\n# Requires Docker + NVIDIA Container Toolkit for containerized BraTS inference & consensus fusion",
+      "highlights": "End-to-end clinical translation suite uniting automated BraTS MRI preprocessing (DICOM-to-NIfTI, SRI24 co-registration, skull stripping), multi-model glioma segmentation, and consensus SIMPLE/majority-voting label fusion."
+    },
+    {
+      "id": "3d-slicer",
+      "name": "3D Slicer",
+      "category": "Neuroimaging Viewer / Clinical Plugin",
+      "year": 2012,
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "CT / CTA",
+        "MRA / DSA",
+        "PET / Nuclear",
+        "Intra-Op Ultrasound"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma",
+        "Aneurysm & Vascular",
+        "Spine",
+        "Multi-Pathology"
+      ],
+      "architecture": "Modular C++/Python medical image computing platform built on VTK, ITK, Qt, and SlicerIGT extensions",
+      "weightsAvailable": false,
+      "openSourceLicense": "3D Slicer License",
+      "framework": "3D Slicer",
+      "repoUrl": "https://github.com/Slicer/Slicer",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.1016/j.mri.2012.05.001",
+      "citation": {
+        "authors": "Fedorov, Andriy and Beichel, Reinhard and Kalpathy-Cramer, Jayashree and Finet, Julien and Fillion-Robin, Jean-Christophe and Pujol, Sonia and Bauer, Christian and Jennings, Dominique and Fennessy, Fiona and Sonka, Milan and Buatti, John and Aylward, Stephen and Miller, James V. and Pieper, Steve and Kikinis, Ron",
+        "title": "3D Slicer as an image computing platform for the Quantitative Imaging Network",
+        "venue": "Magnetic Resonance Imaging",
+        "year": 2012,
+        "bibtexKey": "fedorov2012slicer",
+        "doi": "10.1016/j.mri.2012.05.001"
+      },
+      "installSnippet": "# Download desktop installers from https://download.slicer.org/\n# Or clone source repository:\ngit clone https://github.com/Slicer/Slicer.git",
+      "highlights": "Flagship open-source medical image computing and image-guided therapy platform powering neurosurgical navigation (SlicerIGT), DTI tractography (SlicerDMRI), MONAI Label AI-assisted annotation, and clinical RANO plugins."
+    },
+    {
+      "id": "niivue",
+      "name": "NiiVue",
+      "category": "Neuroimaging Viewer / Clinical Plugin",
+      "year": 2026,
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "fMRI",
+        "CT / CTA",
+        "PET / Nuclear"
+      ],
+      "pathologies": [
+        "Healthy / Normative",
+        "Glioma / GBM",
+        "Multi-Pathology"
+      ],
+      "architecture": "Zero-install WebGL2 browser canvas engine for NIfTI/MGZ volumes, GIfTI/FreeSurfer meshes, and tractography",
+      "weightsAvailable": false,
+      "openSourceLicense": "BSD-2-Clause",
+      "framework": "WebGL2 / JS",
+      "repoUrl": "https://github.com/niivue/niivue",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.52294/001c.167815",
+      "citation": {
+        "authors": "Eckstein, Korbinian and Androulakis, Anthony and Dao, Thuy Thanh and Drake, Chris and Hanayik, Taylor and O'Reilly, Christian and Prahm, Cosima and Wang, Zhengjia and Wighton, Paul and Dalca, Adrian V. and Bollmann, Steffen and Rorden, Chris",
+        "title": "Seamless neuroimaging visualization: The NiiVue wrapper ecosystem",
+        "venue": "Aperture Neuro",
+        "year": 2026,
+        "bibtexKey": "eckstein2026niivue",
+        "doi": "10.52294/001c.167815"
+      },
+      "installSnippet": "npm install @niivue/niivue\n# Or Python Jupyter integration:\npip install ipyniivue",
+      "highlights": "High-performance WebGL2 browser neuroimaging viewer supporting NIfTI, DICOM, GIfTI/FreeSurfer cortical meshes, statistical overlays, and tractography directly in web portals, Jupyter notebooks, and VS Code with zero backend rendering."
+    },
+    {
+      "id": "rano2-assist",
+      "name": "RANO2.0-assist",
+      "category": "Neuroimaging Viewer / Clinical Plugin",
+      "year": 2026,
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "architecture": "3D Slicer clinical extension integrating longitudinal MRI registration, tumor segmentation, and RANO 2.0 rules",
+      "weightsAvailable": false,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "3D Slicer",
+      "repoUrl": "https://github.com/cai4cai/rano2.0-assist",
+      "weightsUrl": null,
+      "paperUrl": "https://doi.org/10.21105/joss.09629",
+      "citation": {
+        "authors": "Kujawa, Aaron and Shi, Tangqi and Booth, Thomas and Vercauteren, Tom",
+        "title": "RANO2.0-assist: A 3D Slicer Extension for (semi-)automatic Assessment of Response to Glioma Treatment",
+        "venue": "Journal of Open Source Software",
+        "year": 2026,
+        "bibtexKey": "kujawa2026rano2assist",
+        "doi": "10.21105/joss.09629"
+      },
+      "installSnippet": "git clone https://github.com/cai4cai/rano2.0-assist.git\n# In 3D Slicer: Edit -> Application Settings -> Modules -> Additional module paths -> add cloned directory",
+      "highlights": "Open-source 3D Slicer extension automating longitudinal glioma response assessment under updated RANO 2.0 guidelines, combining multi-timepoint registration, lesion matching, interactive 2D bi-dimensional measurements, and PDF reporting."
+    },
+    {
+      "id": "tractseg",
+      "name": "TractSeg",
+      "category": "Segmentation Framework",
+      "year": 2018,
+      "modalities": [
+        "Diffusion MRI / DTI"
+      ],
+      "pathologies": [
+        "Healthy / Normative",
+        "Glioma / GBM",
+        "Epilepsy",
+        "Multi-Pathology"
+      ],
+      "architecture": "Multi-view 2D encoder-decoder FCN operating directly on fiber orientation distribution (FOD) peaks",
+      "weightsAvailable": true,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "PyTorch",
+      "repoUrl": "https://github.com/MIC-DKFZ/TractSeg",
+      "weightsUrl": "https://zenodo.org/records/5052821",
+      "paperUrl": "https://doi.org/10.1016/j.neuroimage.2018.07.070",
+      "citation": {
+        "authors": "Wasserthal, Jakob and Neher, Peter and Maier-Hein, Klaus H.",
+        "title": "TractSeg - Fast and accurate white matter tract segmentation",
+        "venue": "NeuroImage",
+        "year": 2018,
+        "bibtexKey": "wasserthal2018tractseg",
+        "doi": "10.1016/j.neuroimage.2018.07.070"
+      },
+      "installSnippet": "pip install TractSeg\nTractSeg -i peaks.nii.gz -o tractseg_output --output_type tract_segmentation",
+      "highlights": "Fast deep-learning segmentation of 72 anatomically defined white matter fiber bundles directly from dMRI fiber orientation peaks, widely used for neurosurgical eloquent-tract mapping (corticospinal tract, arcuate fasciculus, optic radiation)."
+    },
+    {
+      "id": "medsam",
+      "name": "MedSAM",
+      "category": "Foundation Model",
+      "year": 2024,
+      "modalities": [
+        "Structural MRI",
+        "CT / CTA",
+        "Intra-Op Ultrasound",
+        "Optical / Fluorescence",
+        "Histopathology / WSI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Stroke & ICH",
+        "Multi-Pathology"
+      ],
+      "architecture": "Promptable ViT-Base Segment Anything Model fine-tuned on >1.57M multi-modal medical image-mask pairs",
+      "weightsAvailable": true,
+      "openSourceLicense": "Apache-2.0",
+      "framework": "PyTorch",
+      "repoUrl": "https://github.com/bowang-lab/MedSAM",
+      "weightsUrl": "https://zenodo.org/records/10689532",
+      "paperUrl": "https://doi.org/10.1038/s41467-024-44824-z",
+      "citation": {
+        "authors": "Ma, Jun and He, Yuting and Li, Feifei and Han, Lin and You, Chenyu and Wang, Bo",
+        "title": "Segment anything in medical images",
+        "venue": "Nature Communications",
+        "year": 2024,
+        "bibtexKey": "ma2024medsam",
+        "doi": "10.1038/s41467-024-44824-z"
+      },
+      "installSnippet": "git clone https://github.com/bowang-lab/MedSAM.git\ncd MedSAM\npip install -e .\n# Download medsam_vit_b.pth from https://zenodo.org/records/10689532 into work_dir/MedSAM/",
+      "highlights": "Universal bounding-box-promptable medical image segmentation foundation model trained on 1,570,263 image-mask pairs across 10 imaging modalities and >30 cancer types, enabling interactive 2D/slice-wise clinical annotation and 3D Slicer integration."
+    }
+  ]
+}

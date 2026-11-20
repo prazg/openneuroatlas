@@ -1,0 +1,294 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordType": "challenges",
+  "lastUpdated": "2026-11-19",
+  "records": [
+    {
+      "id": "brats-lighthouse",
+      "name": "BraTS Lighthouse Challenge Cluster",
+      "organizer": "MICCAI / RSNA / ASNR / BraTS Consortium",
+      "yearsActive": "2012–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Structural MRI",
+        "Histopathology / WSI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma",
+        "Pediatric Tumors",
+        "Multi-Pathology"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation",
+        "Image Synthesis / Inpainting",
+        "Pathology / Tissue Classification",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "metrics": [
+        "Lesion-wise Dice",
+        "Lesion-wise HD95",
+        "Dice",
+        "HD95",
+        "F1",
+        "PSNR / SSIM"
+      ],
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn64153130",
+      "paperUrl": "https://arxiv.org/abs/2405.18368",
+      "citation": {
+        "authors": "de Verdier, Maria Correia and Saluja, Rachit and LaBella, Dominic and Rudie, Jeffrey D. and Bakas, Spyridon and others",
+        "title": "The 2024 Brain Tumor Segmentation (BraTS) Challenge: Glioma Segmentation on Post-treatment MRI",
+        "venue": "arXiv",
+        "year": 2024,
+        "bibtexKey": "deverdier2024bratslighthouse",
+        "doi": "10.48550/arXiv.2405.18368"
+      },
+      "highlights": "Flagship annual MICCAI neuro-oncology benchmark cluster spanning post-treatment adult glioma, meningioma, brain metastases, pediatric tumors, Sub-Saharan Africa (BraTS-Africa), cross-tumor generalization (BraTS-GoAT), MRI synthesis, and histopathology (BraTS-Path)."
+    },
+    {
+      "id": "remind2reg",
+      "name": "ReMIND2Reg (Brain Resection Multimodal Image Registration Challenge)",
+      "organizer": "MICCAI Learn2Reg / Brigham and Women's Hospital / Harvard Medical School",
+      "yearsActive": "2024–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Structural MRI",
+        "Intra-Op Ultrasound"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma",
+        "Multi-Pathology"
+      ],
+      "tasks": [
+        "Image Registration / Brain Shift",
+        "3D Scene Reconstruction / Navigation"
+      ],
+      "metrics": [
+        "TRE",
+        "Runtime / Efficiency"
+      ],
+      "platform": "Grand Challenge",
+      "url": "https://learn2reg.grand-challenge.org/",
+      "paperUrl": "https://arxiv.org/abs/2508.09649",
+      "citation": {
+        "authors": "Dorent, Reuben and Rigolo, Laura and Galvin, Colin and Chen, Junyu and Heinrich, Mattias P. and Carass, Aaron and Colliot, Olivier and Wassermann, Demian and Golby, Alexandra J. and Kapur, Tina and Wells III, William M.",
+        "title": "The Brain Resection Multimodal Image Registration (ReMIND2Reg) 2025 Challenge",
+        "venue": "arXiv",
+        "year": 2025,
+        "bibtexKey": "dorent2025remind2reg",
+        "doi": "10.48550/arXiv.2508.09649"
+      },
+      "highlights": "MICCAI Learn2Reg multimodal neurosurgical benchmark evaluating non-rigid registration of pre-operative T1ce/T2 MRI to post-resection 3D intraoperative ultrasound (iUS) under large brain-shift deformations and resection cavities via landmark TRE and runtime."
+    },
+    {
+      "id": "endovis-pitvis",
+      "name": "MICCAI EndoVis PitVis (Endoscopic Pituitary Surgery Workflow Recognition)",
+      "organizer": "MICCAI EndoVis / UCL WEISS / National Hospital for Neurology and Neurosurgery",
+      "yearsActive": "2023–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Surgical Video"
+      ],
+      "pathologies": [
+        "Pituitary & Sellar"
+      ],
+      "tasks": [
+        "Surgical Phase Recognition",
+        "Instrument / Tool Tracking"
+      ],
+      "metrics": [
+        "F1",
+        "Accuracy / Balanced Accuracy"
+      ],
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn51232283",
+      "paperUrl": "https://doi.org/10.1016/j.media.2025.103716",
+      "citation": {
+        "authors": "Das, Adrito and Khan, Danyal Z. and Psychogyios, Dimitrios and Zhang, Yitong and Hanrahan, John G. and Vasconcelos, Francisco and Stoyanov, Danail and Marcus, Hani J. and Bano, Sophia and others",
+        "title": "PitVis-2023 challenge: Workflow recognition in videos of endoscopic pituitary surgery",
+        "venue": "Medical Image Analysis",
+        "year": 2025,
+        "bibtexKey": "das2025endovispitvis",
+        "doi": "10.1016/j.media.2025.103716"
+      },
+      "highlights": "Premier neurosurgical video benchmark under MICCAI EndoVis evaluating automated surgical step/phase and micro-instrument recognition in endoscopic transsphenoidal pituitary adenoma surgery videos under severe class imbalance using Macro-F1."
+    },
+    {
+      "id": "endovis-surgvu",
+      "name": "MICCAI EndoVis SurgVU (Surgical Visual Understanding Challenge)",
+      "organizer": "MICCAI EndoVis / Intuitive Surgical",
+      "yearsActive": "2024–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Surgical Video"
+      ],
+      "pathologies": [
+        "Multi-Pathology"
+      ],
+      "tasks": [
+        "Surgical Phase Recognition",
+        "Instrument / Tool Tracking",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "metrics": [
+        "mAP",
+        "F1"
+      ],
+      "platform": "Grand Challenge",
+      "url": "https://surgvu.grand-challenge.org/",
+      "paperUrl": "https://arxiv.org/abs/2501.09209",
+      "citation": {
+        "authors": "Zia, Aneeq and Berniker, Max and Nespolo, Rogerio and Zhang, Xiaorui and Perreault, Conor and Wang, Ziheng and Mueller, Benjamin and Schmidt, Ryan and Bhattacharyya, Kiran and Liu, Xi and Jarc, Anthony",
+        "title": "Surgical Visual Understanding (SurgVU) Dataset",
+        "venue": "arXiv",
+        "year": 2025,
+        "bibtexKey": "zia2025surgvu",
+        "doi": "10.48550/arXiv.2501.09209"
+      },
+      "highlights": "Large-scale MICCAI EndoVis surgical video benchmark (>840 hours of robotic surgical footage) supporting multi-label tool detection, surgical task recognition, and self-supervised pretraining for transfer learning to scarce neurosurgical video cohorts."
+    },
+    {
+      "id": "fets",
+      "name": "FeTS (Federated Tumor Segmentation Challenge)",
+      "organizer": "MICCAI / University of Pennsylvania / Intel / FeTS Consortium",
+      "yearsActive": "2021–2022",
+      "status": "Completed (Open Benchmark)",
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "tasks": [
+        "Tumor Segmentation"
+      ],
+      "metrics": [
+        "Dice",
+        "HD95",
+        "Runtime / Efficiency"
+      ],
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn28546456",
+      "paperUrl": "https://doi.org/10.1038/s41467-025-60466-1",
+      "citation": {
+        "authors": "Zenk, Maximilian and Baid, Ujjwal and Pati, Sarthak and Linardos, Akis and Edwards, Brandon and Sheller, Micah J. and Foley, Patrick and Aristizabal, Alejandro and Zimmerer, David and Bakas, Spyridon and others",
+        "title": "Towards fair decentralized benchmarking of healthcare AI algorithms with the Federated Tumor Segmentation (FeTS) challenge",
+        "venue": "Nature Communications",
+        "year": 2025,
+        "bibtexKey": "zenk2025fets",
+        "doi": "10.1038/s41467-025-60466-1"
+      },
+      "highlights": "First real-world multi-institutional federated learning benchmark in medical imaging, evaluating privacy-preserving weight aggregation and cross-institution glioblastoma segmentation generalizability across >30 global clinical sites without centralizing raw MRI."
+    },
+    {
+      "id": "brats-synthesis",
+      "name": "BraTS Local Inpainting & Global Missing-Modality MRI Synthesis Challenge",
+      "organizer": "MICCAI / BraTS Consortium / Technical University of Munich / University of Zurich",
+      "yearsActive": "2023–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Structural MRI"
+      ],
+      "pathologies": [
+        "Glioma / GBM",
+        "Healthy / Normative"
+      ],
+      "tasks": [
+        "Image Synthesis / Inpainting",
+        "Tumor Segmentation"
+      ],
+      "metrics": [
+        "PSNR / SSIM",
+        "MAE / RMSE",
+        "Dice"
+      ],
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn53708249",
+      "paperUrl": "https://arxiv.org/abs/2305.08992",
+      "citation": {
+        "authors": "Kofler, Florian and Meissen, Felix and Steinbauer, Felix and Graf, Robert and Li, Hongwei Bran and Menze, Bjoern H. and others",
+        "title": "The Brain Tumor Segmentation (BraTS) Challenge: Local Synthesis of Healthy Brain Tissue via Inpainting",
+        "venue": "arXiv",
+        "year": 2023,
+        "bibtexKey": "kofler2023bratssynthesis",
+        "doi": "10.48550/arXiv.2305.08992"
+      },
+      "highlights": "Twin generative neuroimaging benchmarks evaluating 3D healthy-tissue inpainting inside tumor masks (enabling standard parcellation on diseased brains) and BraSyn global missing-modality MRI synthesis judged by both image fidelity (PSNR/SSIM) and downstream segmentation Dice."
+    },
+    {
+      "id": "rsna-asnr-miccai-radiogenomics",
+      "name": "RSNA-ASNR-MICCAI Brain Tumor Radiogenomic Classification",
+      "organizer": "RSNA / ASNR / MICCAI",
+      "yearsActive": "2021",
+      "status": "Completed (Open Benchmark)",
+      "modalities": [
+        "Structural MRI",
+        "Genomics / Omics"
+      ],
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "tasks": [
+        "Molecular / Radiogenomic Prediction",
+        "Tumor Classification / Grading"
+      ],
+      "metrics": [
+        "AUROC"
+      ],
+      "platform": "Kaggle",
+      "url": "https://www.kaggle.com/competitions/rsna-miccai-brain-tumor-radiogenomic-classification",
+      "paperUrl": "https://arxiv.org/abs/2107.02314",
+      "citation": {
+        "authors": "Baid, Ujjwal and Menze, Bjoern and Flanders, Adam E. and Bakas, Spyridon and others",
+        "title": "The RSNA-ASNR-MICCAI BraTS 2021 Benchmark on Brain Tumor Segmentation and Radiogenomic Classification",
+        "venue": "arXiv",
+        "year": 2021,
+        "bibtexKey": "baid2021rsnaradiogenomics",
+        "doi": "10.48550/arXiv.2107.02314"
+      },
+      "highlights": "Landmark Kaggle radiogenomics benchmark predicting glioblastoma MGMT promoter methylation from multi-parametric MRI, demonstrating that blinded multi-site AUROCs stalled near ~0.62 and documenting crucial lessons on site confounding and data leakage in neuro-oncology AI."
+    },
+    {
+      "id": "isles",
+      "name": "ISLES (Ischemic Stroke Lesion Segmentation Challenge)",
+      "organizer": "MICCAI / Technical University of Munich / University of Bern / ISLES Consortium",
+      "yearsActive": "2015–Present",
+      "status": "Active / Recurring",
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "Perfusion MRI",
+        "CT / CTA"
+      ],
+      "pathologies": [
+        "Stroke & ICH"
+      ],
+      "tasks": [
+        "Lesion / Hemorrhage Detection",
+        "Survival / Outcome Prediction"
+      ],
+      "metrics": [
+        "Dice",
+        "F1",
+        "MAE / RMSE"
+      ],
+      "platform": "Grand Challenge",
+      "url": "https://isles-24.grand-challenge.org/",
+      "paperUrl": "https://doi.org/10.1016/j.media.2026.104362",
+      "citation": {
+        "authors": "de la Rosa, Ezequiel and Su, Ruisheng and Reyes, Mauricio and Wiest, Roland and Riedel, Evamaria Olga and Kofler, Florian and Menze, Bjoern and others",
+        "title": "ISLES'24: Final Stroke Infarct Prediction with Multimodal Imaging and Clinical Data. Where Do We Stand?",
+        "venue": "Medical Image Analysis",
+        "year": 2026,
+        "bibtexKey": "delarosa2026isles24",
+        "doi": "10.1016/j.media.2026.104362"
+      },
+      "highlights": "Companion MICCAI cerebrovascular evaluation standard spanning multi-center DWI/ADC/FLAIR acute ischemic stroke lesion segmentation (ISLES 2022) and multimodal acute CT/CTA/CTP plus clinical tabular final infarct outcome prediction (ISLES 2024)."
+    }
+  ]
+}

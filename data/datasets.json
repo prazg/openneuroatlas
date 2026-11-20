@@ -1,0 +1,1056 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordType": "datasets",
+  "lastUpdated": "2026-11-19",
+  "records": [
+    {
+      "id": "remind",
+      "name": "Brain Resection Multimodal Imaging Database (ReMIND)",
+      "shortName": "ReMIND",
+      "year": 2024,
+      "pathologies": [
+        "Glioma / GBM",
+        "Brain Metastases",
+        "Meningioma"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Intra-Op Ultrasound"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Intra-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation",
+        "Image Registration / Brain Shift",
+        "3D Scene Reconstruction / Navigation"
+      ],
+      "cohortSize": 114,
+      "cohortDisplay": "114 patients (369 pre-op MRI, 320 3D iUS, 301 iMRI)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Voxel-wise Anatomy / Parcellation",
+        "Molecular / Genetic Labels"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "1p/19q",
+        "WHO Grade"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/remind/",
+      "paperUrl": "https://doi.org/10.1038/s41597-024-03295-z",
+      "citation": {
+        "authors": "Juvekar, Parikshit and Dorent, Reuben and Kögl, Fryderyk and others",
+        "title": "ReMIND: The Brain Resection Multimodal Imaging Database",
+        "venue": "Scientific Data",
+        "year": 2024,
+        "bibtexKey": "juvekar2024remind",
+        "doi": "10.1038/s41597-024-03295-z"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities\npip install tcia_utils\n\n# Query and download the ReMIND collection (TCIA DOI: 10.7937/3RAG-D070)\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='ReMIND'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/remind')\"\n\n# Alternatively, download the .tcia manifest from:\n# https://www.cancerimagingarchive.net/collection/remind/",
+      "highlights": "Flagship perioperative neurosurgery dataset pairing preoperative structural MRI, tracked 3D intraoperative ultrasound (iUS), and 3T intraoperative MRI across 114 consecutive tumor resections with 356 expert tumor, cerebrum, and resection-cavity segmentations.",
+      "limitations": "Single-center cohort acquired in the Brigham and Women's Hospital AMIGO suite; non-glioma lesions represent a minority (11 metastases, 11 other lesions), and longitudinal post-discharge follow-up MRI is not included."
+    },
+    {
+      "id": "resect-seg",
+      "name": "RESECT & RESECT-SEG (Intraoperative Ultrasound Low-Grade Glioma Database)",
+      "shortName": "RESECT-SEG",
+      "year": 2024,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Intra-Op Ultrasound"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Intra-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation",
+        "Image Registration / Brain Shift"
+      ],
+      "cohortSize": 23,
+      "cohortDisplay": "23 LGG patients (pre-op MRI + tracked 3D iUS + masks)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Anatomical Landmarks / Fiducials"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Open Access",
+      "license": "CC BY-NC-SA 4.0 (RESECT-SEG) / CC BY 4.0 (RESECT)",
+      "platform": "OSF",
+      "url": "https://osf.io/6y4db/",
+      "paperUrl": "https://doi.org/10.1002/mp.17317",
+      "citation": {
+        "authors": "Behboodi, Bahareh and Carton, Francois-Xavier and Chabanas, Matthieu and de Ribaupierre, Sandrine and Solheim, Ole and Munkvold, Bodil K. R. and Rivaz, Hassan and Xiao, Yiming and Reinertsen, Ingerid",
+        "title": "Open access segmentations of intraoperative brain tumor ultrasound images",
+        "venue": "Medical Physics",
+        "year": 2024,
+        "bibtexKey": "behboodi2024resectseg",
+        "doi": "10.1002/mp.17317"
+      },
+      "fetchSnippet": "# 1. Download RESECT-SEG expert 3D iUS tumor & cavity masks from OSF\npip install osfclient\nosf -p 6y4db clone ./data/resect-seg\n\n# 2. Download base RESECT pre-op MRI, tracked 3D iUS, and anatomical landmarks\n# Hosted on NIRD Research Data Archive (CC BY 4.0, DOI: 10.11582/2017.00004):\n# https://doi.org/10.11582/2017.00004",
+      "highlights": "Combines the seminal RESECT tracked 3D intraoperative ultrasound and preoperative MRI database of 23 low-grade glioma surgeries with open-access RESECT-SEG expert voxel-wise tumor and resection-cavity segmentations alongside homologous brain-shift landmarks.",
+      "limitations": "Small single-center cohort (23 patients, St. Olavs University Hospital) restricted to low-grade gliomas without modern WHO 2021 molecular markers (IDH/1p19q), limiting generalizability across ultrasound vendors and high-grade tumors."
+    },
+    {
+      "id": "brats-adult-glioma",
+      "name": "BraTS Adult Glioma (RSNA-ASNR-MICCAI Multi-Institutional Pre-Op mpMRI)",
+      "shortName": "BraTS Adult Glioma",
+      "year": 2021,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Molecular / Radiogenomic Prediction",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "cohortSize": 2040,
+      "cohortDisplay": "2,040 patients (1,251 labeled training mpMRI)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Molecular / Genetic Labels"
+      ],
+      "molecularMarkers": [
+        "MGMT"
+      ],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn25829067",
+      "paperUrl": "https://arxiv.org/abs/2107.02314",
+      "citation": {
+        "authors": "Baid, Ujjwal and Ghodasara, Satyam and Mohan, Suyash and Bilello, Michel and Calabrese, Evan and Colak, Errol and Farahani, Keyvan and Kalpathy-Cramer, Jayashree and Kitamura, Felipe C. and Pati, Sarthak and others",
+        "title": "The RSNA-ASNR-MICCAI BraTS 2021 Benchmark on Brain Tumor Segmentation and Radiogenomic Classification",
+        "venue": "arXiv",
+        "year": 2021,
+        "bibtexKey": "baid2021brats",
+        "doi": "10.48550/arXiv.2107.02314"
+      },
+      "fetchSnippet": "# Install Synapse CLI and authenticate with a free Synapse account\npip install synapseclient\nsynapse login\n\n# Register for BraTS Adult Glioma on Synapse (syn25829067 / BraTS 2023: syn51156910)\n# Then download approved training archives:\nsynapse get -r syn25829067 --downloadLocation ./data/brats-adult-glioma",
+      "highlights": "The canonical multi-institutional adult diffuse glioma mpMRI benchmark (T1, T1ce, T2, T2-FLAIR) co-registered to SRI24 1 mm isotropic space with neuroradiologist-refined enhancing tumor, necrotic core, and peritumoral edema masks plus MGMT radiogenomics labels.",
+      "limitations": "Pre-processed skull-stripped preoperative scans only; masks rely on harmonized clinical routine acquisitions primarily from North American and European centers without raw DICOM headers or post-treatment timepoints."
+    },
+    {
+      "id": "brats-post-treatment",
+      "name": "BraTS Adult Glioma Post-Treatment MRI (BraTS 2024)",
+      "shortName": "BraTS Post-Treatment",
+      "year": 2024,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Early Post-Op",
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation"
+      ],
+      "cohortSize": 2200,
+      "cohortDisplay": "~2,200 post-treatment glioma MRI cases (7 centers)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn53708249",
+      "paperUrl": "https://arxiv.org/abs/2405.18368",
+      "citation": {
+        "authors": "Correia de Verdier, Maria and Saluja, Rachit and Gagnon, Louis and LaBella, Dominic A. and Baid, Ujjwal and Tahon, Nour El-Hoda Mostafa and Foltyn-Dumitru, Martha and Zhang, Ji-Kai and Bakas, Spyridon and Calabrese, Evan D. and Rudie, Jeffrey David and others",
+        "title": "The 2024 Brain Tumor Segmentation (BraTS) Challenge: Glioma Segmentation on Post-treatment MRI",
+        "venue": "arXiv",
+        "year": 2024,
+        "bibtexKey": "deverdier2024bratspost",
+        "doi": "10.48550/arXiv.2405.18368"
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Request access via the BraTS 2024 Synapse portal (syn53708249)\n# Download the Post-Treatment Glioma training/validation release once approved:\nsynapse get -r syn53708249 --downloadLocation ./data/brats-post-treatment",
+      "highlights": "First large-scale multi-institutional BraTS benchmark dedicated exclusively to post-surgical and post-treatment diffuse gliomas across 7 academic centers, introducing explicit resection cavity (RC) labels alongside enhancing tissue, non-enhancing core, and FLAIR hyperintensity.",
+      "limitations": "Distinguishing true residual/recurrent tumor from post-surgical blood products and treatment-related radiation changes remains inherently challenging; linked clinical treatment dates and genomic markers are not bundled in the challenge split."
+    },
+    {
+      "id": "brats-men",
+      "name": "BraTS-MEN (ASNR-MICCAI Intracranial Meningioma mpMRI)",
+      "shortName": "BraTS-MEN",
+      "year": 2023,
+      "pathologies": [
+        "Meningioma"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation"
+      ],
+      "cohortSize": 1000,
+      "cohortDisplay": "~1,000 pre-op meningioma mpMRI cases",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn51514106",
+      "paperUrl": "https://arxiv.org/abs/2305.07642",
+      "citation": {
+        "authors": "LaBella, Dominic and Adewole, Maruf and Alonso-Basanta, Michelle and Altes, Talissa A. and Anwar, Syed Muhammad and Baid, Ujjwal and Bergquist, Timothy and Kazerooni, Anahita Fathi and Moawad, Ahmed W. and Menze, Bjoern H. and Bakas, Spyridon and Calabrese, Evan D. and others",
+        "title": "The ASNR-MICCAI Brain Tumor Segmentation (BraTS) Challenge 2023: Intracranial Meningioma",
+        "venue": "arXiv",
+        "year": 2023,
+        "bibtexKey": "labella2023bratsmen",
+        "doi": "10.48550/arXiv.2305.07642"
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Register for the BraTS 2023 Meningioma task (syn51514106 / portal syn51156910)\nsynapse get -r syn51514106 --downloadLocation ./data/brats-men",
+      "highlights": "Largest multi-institutional expert-annotated preoperative intracranial meningioma mpMRI cohort, spanning dural-based, skull-base, and convexity lesions with standardized enhancing tumor, non-enhancing tumor core, and surrounding FLAIR hyperintensity labels.",
+      "limitations": "Skull-stripping preprocessing can occasionally clip peripheral extra-axial dural tails or osseous skull-base invasion; WHO histological grade and radiotherapy planning contours are separated into the distinct BraTS-MEN-RT effort."
+    },
+    {
+      "id": "brats-mets",
+      "name": "BraTS-METS (Pre-Treatment Brain Metastases mpMRI)",
+      "shortName": "BraTS-METS",
+      "year": 2023,
+      "pathologies": [
+        "Brain Metastases"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Lesion / Hemorrhage Detection"
+      ],
+      "cohortSize": 1303,
+      "cohortDisplay": "1,303 total studies (402 public training, 3,076 lesions)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn51156910",
+      "paperUrl": "https://arxiv.org/abs/2306.00838",
+      "citation": {
+        "authors": "Moawad, Ahmed W. and Janas, Anastasia and Baid, Ujjwal and Ramakrishnan, Divya and Saluja, Rachit and Ashraf, Nader and Adewole, Maruf and Albrecht, Jake and Anazodo, Udunna and Aneja, Sanjay and others",
+        "title": "The Brain Tumor Segmentation (BraTS-METS) Challenge 2023: Brain Metastasis Segmentation on Pre-treatment MRI",
+        "venue": "arXiv",
+        "year": 2023,
+        "bibtexKey": "moawad2023bratsmets",
+        "doi": "10.48550/arXiv.2306.00838"
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Register for the BraTS 2023 Metastases task under portal syn51156910\nsynapse get -r syn51156910 --downloadLocation ./data/brats-mets",
+      "highlights": "Multi-institutional pretreatment brain metastases benchmark compiled from 8 international cohorts featuring thousands of small, multifocal intracranial lesions evaluated with lesion-wise Dice and HD95 metrics critical for stereotactic radiosurgery planning.",
+      "limitations": "Only a subset of the 1,303 curated studies (402 training studies) is released publicly with labels; tiny sub-5 mm metastases suffer high inter-rater variability and primary systemic cancer histologies are not uniformly provided."
+    },
+    {
+      "id": "brats-peds",
+      "name": "BraTS-PEDs (Pediatric Brain Tumors Multi-Institutional mpMRI)",
+      "shortName": "BraTS-PEDs",
+      "year": 2024,
+      "pathologies": [
+        "Pediatric Tumors",
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation"
+      ],
+      "cohortSize": 457,
+      "cohortDisplay": "457 pediatric HGG/DMG patients (261 public train in 2024)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn53708249",
+      "paperUrl": "https://arxiv.org/abs/2404.15009",
+      "citation": {
+        "authors": "Kazerooni, Anahita Fathi and Khalili, Nastaran and Liu, Xinyang and Gandhi, Deep and Jiang, Zhifan and Anwar, Syed Muhammad and Albrecht, Jake and Adewole, Maruf and Anazodo, Udunna and Baid, Ujjwal and Linguraru, Marius George and others",
+        "title": "The Brain Tumor Segmentation in Pediatrics (BraTS-PEDs) Challenge: Focus on Pediatrics",
+        "venue": "arXiv",
+        "year": 2024,
+        "bibtexKey": "kazerooni2024bratspeds",
+        "doi": "10.48550/arXiv.2404.15009"
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Register for BraTS-PEDs via the BraTS 2024 Synapse portal (syn53708249)\n# Training data workspace (syn58894466) becomes downloadable after challenge approval:\nsynapse get -r syn58894466 --downloadLocation ./data/brats-peds",
+      "highlights": "International pediatric neuro-oncology mpMRI benchmark aggregated across CBTN, CONNECT, DIPG Registry, and TCIA, targeting pediatric high-grade gliomas and diffuse midline gliomas where adult-trained BraTS models fail due to distinct anatomy and non-enhancing cystic components.",
+      "limitations": "Focuses primarily on pediatric high-grade gliomas and diffuse midline gliomas rather than embryonal or low-grade pediatric tumors; pediatric molecular markers (e.g., H3K27M, BRAF) require separate consortium linkage."
+    },
+    {
+      "id": "brats-africa",
+      "name": "BraTS-Africa (Sub-Saharan African Clinical Glioma mpMRI)",
+      "shortName": "BraTS-Africa",
+      "year": 2024,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation"
+      ],
+      "cohortSize": 146,
+      "cohortDisplay": "146 adult patients (95 diffuse gliomas, 51 other CNS tumors)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/BraTS-Africa/",
+      "paperUrl": "https://arxiv.org/abs/2305.19369",
+      "citation": {
+        "authors": "Adewole, Maruf and Rudie, Jeffrey D. and Gbadamosi, Anu and Zhang, Dawn and Raymond, Confidence and Ajigbotosho, John and Toyobo, Olufunmilayo and Anazodo, Udunna C. and others",
+        "title": "The Brain Tumor Segmentation (BraTS) Challenge 2023: Glioma Segmentation in Sub-Saharan Africa Patient Population (BraTS-Africa)",
+        "venue": "arXiv",
+        "year": 2023,
+        "bibtexKey": "adewole2023bratsafrica",
+        "doi": "10.48550/arXiv.2305.19369"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities (Open Access CC BY 4.0, DOI: 10.7937/v8h6-8x67)\npip install tcia_utils\n\n# Query and download the BraTS-Africa collection from TCIA\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='BraTS-Africa'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/brats-africa')\"\n\n# Challenge splits are also mirrored on Synapse (syn51156910 / syn53708249).",
+      "highlights": "Landmark global-equity neuroimaging cohort of 146 patients retrospectively curated across clinical diagnostic centers in Nigeria, enabling rigorous stress-testing of domain adaptation and low-field / heterogeneous clinical MRI generalization outside the Global North.",
+      "limitations": "Modest cohort size sourced exclusively from Nigerian clinical centers; lower magnetic field strengths (including 1.5T and routine anisotropic protocols) and advanced late-stage tumor presentations create substantial domain shift without paired molecular genomics."
+    },
+    {
+      "id": "brats-goat",
+      "name": "BraTS-GoAT (Generalizability Across Tumors Multi-Entity mpMRI)",
+      "shortName": "BraTS-GoAT",
+      "year": 2024,
+      "pathologies": [
+        "Multi-Pathology",
+        "Glioma / GBM",
+        "Meningioma",
+        "Brain Metastases",
+        "Pediatric Tumors"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "cohortSize": 2489,
+      "cohortDisplay": "2,489 training scans (1,351 labeled + 1,138 unlabeled)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Unlabeled / Self-Supervised"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn52939291",
+      "paperUrl": null,
+      "citation": {
+        "authors": "Conte, Gian Marco and Baid, Ujjwal and Bakas, Spyridon and Kazerooni, Anahita Fathi and Aboian, Mariam and Calabrese, Evan and Chung, Verena and others",
+        "title": "BraTS-GoAT: Brain Tumor Segmentation Generalizability Across Tumors Challenge (ISBI 2024)",
+        "venue": "Synapse",
+        "year": 2024,
+        "bibtexKey": "conte2024bratsgoat",
+        "doi": null
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Register on the ISBI 2024 BraTS-GoAT Synapse project (syn52939291)\n# Includes labeled multi-tumor training cases and unlabeled scans for SSL:\nsynapse get -r syn52939291 --downloadLocation ./data/brats-goat",
+      "highlights": "Cross-entity generalization benchmark (IEEE ISBI 2024) uniting labeled and unlabeled preoperative mpMRI scans across adult glioma, meningioma, metastases, pediatric tumors, and BraTS-Africa to test foundation and semi-supervised models on unseen tumor pathologies.",
+      "limitations": "Training distribution remains heavily skewed toward adult diffuse glioma relative to rare or pediatric subtypes; relies on standardized BraTS skull-stripped 4-sequence mpMRI and lacks longitudinal or intraoperative scans."
+    },
+    {
+      "id": "brats-path",
+      "name": "BraTS-Path (Glioblastoma Digital Histopathology Sub-Regions)",
+      "shortName": "BraTS-Path",
+      "year": 2024,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Histopathology / WSI"
+      ],
+      "clinicalPhases": [
+        "Pathology/Ex-Vivo"
+      ],
+      "tasks": [
+        "Pathology / Tissue Classification",
+        "Tumor Segmentation"
+      ],
+      "cohortSize": null,
+      "cohortDisplay": "309,118 H&E tissue patches (11 international sites)",
+      "annotations": [
+        "Histopathology / Region Labels"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "Synapse Terms of Use",
+      "platform": "Synapse",
+      "url": "https://www.synapse.org/Synapse:syn53708249",
+      "paperUrl": "https://arxiv.org/abs/2405.10871",
+      "citation": {
+        "authors": "Bakas, Spyridon and Thakur, Siddhesh P. and Faghani, Shahriar and Moassefi, Mana and Baid, Ujjwal and Chung, Verena and Pati, Sarthak and others",
+        "title": "BraTS-Path Challenge: Assessing Heterogeneous Histopathologic Brain Tumor Sub-regions",
+        "venue": "arXiv",
+        "year": 2024,
+        "bibtexKey": "bakas2024bratspath",
+        "doi": "10.48550/arXiv.2405.10871"
+      },
+      "fetchSnippet": "# Install Synapse client and authenticate\npip install synapseclient\nsynapse login\n\n# Register for the BraTS-Path 2024 computational pathology task via syn53708249\n# Training split contains 96,485 expert-labeled H&E FFPE GBM patches:\nsynapse get -r syn53708249 --downloadLocation ./data/brats-path",
+      "highlights": "First BraTS computational pathology benchmark co-developed with RANO-Pathology and AI-RANO working groups, offering 309,118 neuropathologist-annotated FFPE H&E glioblastoma patches across 11 institutions covering cellular tumor, necrosis, microvascular proliferation, and infiltration.",
+      "limitations": "Patch-level ex-vivo FFPE H&E representation lacks spatial whole-slide context and paired preoperative MRI or molecular genomic readouts; stain and scanner variability across the 11 sites can impact out-of-domain robustness."
+    },
+    {
+      "id": "ucsf-pdgm",
+      "name": "University of California San Francisco Preoperative Diffuse Glioma MRI (UCSF-PDGM)",
+      "shortName": "UCSF-PDGM",
+      "year": 2022,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "Perfusion MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Molecular / Radiogenomic Prediction",
+        "Survival / Outcome Prediction",
+        "Tumor Classification / Grading"
+      ],
+      "cohortSize": 501,
+      "cohortDisplay": "501 diffuse glioma patients (3T mpMRI + DTI + ASL)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "1p/19q",
+        "WHO Grade"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/ucsf-pdgm/",
+      "paperUrl": "https://doi.org/10.1148/ryai.220058",
+      "citation": {
+        "authors": "Calabrese, Evan and Villanueva-Meyer, Javier E. and Rudie, Jeffrey D. and Rauschecker, Andreas M. and Baid, Ujjwal and Bakas, Spyridon and Cha, Soonmee and Mongan, John T. and Hess, Christopher P.",
+        "title": "The University of California San Francisco Preoperative Diffuse Glioma MRI Dataset",
+        "venue": "Radiology: Artificial Intelligence",
+        "year": 2022,
+        "bibtexKey": "calabrese2022ucsfpdgm",
+        "doi": "10.1148/ryai.220058"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities (Open Access CC BY 4.0, DOI: 10.7937/tcia.bdgf-8v37)\npip install tcia_utils\n\n# Query and download UCSF-PDGM DICOM series from TCIA\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='UCSF-PDGM'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/ucsf-pdgm')\"\n\n# Pre-processed NIfTI volumes, masks, and IDH/MGMT CSV metadata are on the TCIA collection page.",
+      "highlights": "Uniformly acquired 3T preoperative MRI dataset of 501 WHO grade II-IV diffuse gliomas pairing 3D structural sequences with HARDI diffusion (DTI) and 3D arterial spin labeling (ASL) perfusion, expert tumor masks, survival outcomes, and IDH/MGMT/1p19q molecular labels.",
+      "limitations": "Single-center, single-vendor 3T GE scanner protocol limits direct assessment of cross-vendor scanner shift; preoperative baseline scans only without post-resection or longitudinal recurrence follow-up."
+    },
+    {
+      "id": "upenn-gbm",
+      "name": "University of Pennsylvania Glioblastoma Cohort (UPENN-GBM)",
+      "shortName": "UPENN-GBM",
+      "year": 2022,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "Perfusion MRI",
+        "Histopathology / WSI",
+        "Genomics / Omics"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Longitudinal",
+        "Pathology/Ex-Vivo"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction",
+        "Skull Stripping / Preprocessing"
+      ],
+      "cohortSize": 630,
+      "cohortDisplay": "630 de novo GBM patients (671 mpMRI scans)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels",
+        "Radiomics / Tabular Features"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "EGFR",
+        "WHO Grade"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/upenn-gbm/",
+      "paperUrl": "https://doi.org/10.1038/s41597-022-01560-7",
+      "citation": {
+        "authors": "Bakas, Spyridon and Sako, Chiharu and Akbari, Hamed and Bilello, Michel and Sotiras, Aristeidis and Shukla, Gaurav and Rudie, Jeffrey D. and Santamaría, Natali Flores and Kazerooni, Anahita Fathi and Pati, Sarthak and Davatzikos, Christos and others",
+        "title": "The University of Pennsylvania glioblastoma (UPenn-GBM) cohort: advanced MRI, clinical, genomics, & radiomics",
+        "venue": "Scientific Data",
+        "year": 2022,
+        "bibtexKey": "bakas2022upenngbm",
+        "doi": "10.1038/s41597-022-01560-7"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities (Open Access CC BY 4.0, DOI: 10.7937/TCIA.709X-DN49)\npip install tcia_utils\n\n# Query and download UPENN-GBM DICOM series from TCIA\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='UPENN-GBM'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/upenn-gbm')\"\n\n# Pre-processed NIfTI scans, CaPTk radiomics CSVs, and clinical/genomic tables are on the collection page.",
+      "highlights": "Comprehensive multimodal de novo glioblastoma cohort of 630 patients uniting structural mpMRI, DTI, and DSC-MRI perfusion with matched digitized H&E whole-slide images (.ndpi) for a subset of cases, survival outcomes, clinical IDH1/MGMT and targeted genomic metadata, pre-extracted radiomics features, and automated plus manually corrected tumor masks.",
+      "limitations": "Single-health-system US cohort; manual neuroradiologist mask corrections and digitized H&E whole-slide images exist only for a subset of cases (remaining masks are automated ensembles), and molecular marker completeness (e.g., MGMT, targeted genomic panels) varies across patients."
+    },
+    {
+      "id": "mu-glioma-post",
+      "name": "University of Missouri Post-Treatment Glioma Dataset (MU-Glioma-Post)",
+      "shortName": "MU-Glioma-Post",
+      "year": 2025,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Early Post-Op",
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction"
+      ],
+      "cohortSize": 203,
+      "cohortDisplay": "203 glioma patients (594+ post-treatment MRI scans)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels",
+        "Clinical Reports / Structured EHR"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "1p/19q",
+        "ATRX",
+        "TERT",
+        "EGFR",
+        "WHO Grade"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/mu-glioma-post/",
+      "paperUrl": "https://doi.org/10.1038/s41597-025-06011-7",
+      "citation": {
+        "authors": "Mahmoud, Esmat and Gass, Jaime and Dhemesh, Yaseen and Greaser, Josh and Pogorzelski, Karolina and Isufi, Edvin and Garrett, Filip and Thacker, Jonathan and Tahon, Nourel Hoda and Sinclair, Jason and Layfield, Lester and Altes, Talissa and Nada, Ayman",
+        "title": "MU-Glioma Post: A comprehensive dataset of automated MR multi-sequence segmentation and clinical features",
+        "venue": "Scientific Data",
+        "year": 2025,
+        "bibtexKey": "mahmoud2025mugliomapost",
+        "doi": "10.1038/s41597-025-06011-7"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities (Open Access CC BY 4.0, DOI: 10.7937/7k9k-3c83)\npip install tcia_utils\n\n# Query and download MU-Glioma-Post from TCIA\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='MU-Glioma-Post'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/mu-glioma-post')\"\n\n# Download clinical/molecular CSVs and refined post-op masks from:\n# https://www.cancerimagingarchive.net/collection/mu-glioma-post/",
+      "highlights": "Open-access longitudinal post-treatment glioma MRI repository spanning 203 patients and nearly 600 follow-up exams with neuroradiologist-refined resection cavity and tumor sub-region masks paired with rich treatment histories and molecular biomarkers (IDH, MGMT, 1p/19q, ATRX, TERT, EGFR).",
+      "limitations": "Single-center retrospective US cohort (University of Missouri); initial segmentation contours were generated via nnU-Net before expert refinement, and follow-up interval cadence reflects heterogeneous routine clinical care."
+    },
+    {
+      "id": "rhuh-gbm",
+      "name": "Río Hortega University Hospital Glioblastoma Dataset (RHUH-GBM)",
+      "shortName": "RHUH-GBM",
+      "year": 2023,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Early Post-Op",
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Resection Cavity Segmentation",
+        "Survival / Outcome Prediction"
+      ],
+      "cohortSize": 40,
+      "cohortDisplay": "40 GBM patients (pre-op, <72h post-op & recurrence MRI)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "WHO Grade"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC BY 4.0",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/rhuh-gbm/",
+      "paperUrl": "https://doi.org/10.1016/j.dib.2023.109617",
+      "citation": {
+        "authors": "Cepeda, Santiago and García-García, Sergio and Arrese, Ignacio and Herrero, Francisco and Escudero, Trinidad and Zamora, Tomás and Sarabia, Rosario",
+        "title": "The Río Hortega University Hospital Glioblastoma dataset: a comprehensive collection of preoperative, early postoperative and recurrence MRI scans (RHUH-GBM)",
+        "venue": "Data in Brief",
+        "year": 2023,
+        "bibtexKey": "cepeda2023rhuhgbm",
+        "doi": "10.1016/j.dib.2023.109617"
+      },
+      "fetchSnippet": "# Install TCIA Python utilities (Open Access CC BY 4.0, DOI: 10.7937/4545-c905)\npip install tcia_utils\n\n# Query and download RHUH-GBM from TCIA\npython -c \"from tcia_utils import nbia; series = nbia.getSeries(collection='RHUH-GBM'); print(f'Found {len(series)} series'); nbia.downloadSeries(series, path='./data/rhuh-gbm')\"\n\n# Pre-processed NIfTI volumes and volumetric resection tables are available on the TCIA page.",
+      "highlights": "Rare open-access longitudinal glioblastoma dataset capturing all three key neurosurgical milestones—preoperative, early (<72 h) postoperative extent-of-resection, and first recurrence structural MRI plus DWI-derived ADC maps—with expert-validated tumor segmentations and clinical survival data.",
+      "limitations": "Small single-center Spanish cohort (40 patients) restricted to patients who achieved gross-total or near-total resection and subsequently experienced documented recurrence, introducing selection bias against biopsy-only cases."
+    },
+    {
+      "id": "lumiere",
+      "name": "LUMIERE: Longitudinal Glioblastoma MRI with Expert RANO Evaluation",
+      "shortName": "LUMIERE",
+      "year": 2022,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Early Post-Op",
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction"
+      ],
+      "cohortSize": 91,
+      "cohortDisplay": "91 GBM patients (638 study dates, 2,487 MRI scans)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels",
+        "Radiomics / Tabular Features"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT"
+      ],
+      "accessTier": "Open Access",
+      "license": "CC0 1.0",
+      "platform": "Figshare",
+      "url": "https://figshare.com/collections/The_LUMIERE_Dataset_Longitudinal_Glioblastoma_MRI_with_Expert_RANO_Evaluation/5904905",
+      "paperUrl": "https://doi.org/10.1038/s41597-022-01881-7",
+      "citation": {
+        "authors": "Suter, Yannick and Knecht, Urspeter and Valenzuela, Waldo and Notter, Michelle and Hewer, Ekkehard and Schucht, Philippe and Wiest, Roland and Reyes, Mauricio",
+        "title": "The LUMIERE dataset: Longitudinal Glioblastoma MRI with expert RANO evaluation",
+        "venue": "Scientific Data",
+        "year": 2022,
+        "bibtexKey": "suter2022lumiere",
+        "doi": "10.1038/s41597-022-01881-7"
+      },
+      "fetchSnippet": "# Query Figshare API v2 for LUMIERE Collection 5904905 (CC0 1.0, DOI: 10.6084/m9.figshare.c.5904905.v1)\npython -c \"import urllib.request, json; arts = json.loads(urllib.request.urlopen('https://api.figshare.com/v2/collections/5904905/articles?page_size=50').read()); print([(a['id'], a['title']) for a in arts])\"\n\n# Or download directly via browser/curl from:\n# https://figshare.com/collections/The_LUMIERE_Dataset_Longitudinal_Glioblastoma_MRI_with_Expert_RANO_Evaluation/5904905",
+      "highlights": "Public-domain (CC0) longitudinal glioblastoma MRI benchmark across 91 patients and 638 follow-up dates pairing multi-sequence imaging with expert neuroradiologist RANO response assessments, overall survival, IDH/MGMT pathology subsets, and automated segmentation/radiomics baselines.",
+      "limitations": "Single-center Swiss cohort (Bern University Hospital); provided voxel-wise segmentations are automated outputs (DeepBraTumIA and HD-GLIO-AUTO) rather than manually corrected gold standards, and molecular status is missing for a subset of patients."
+    },
+    {
+      "id": "burdenko-gbm-progression",
+      "name": "Burdenko's Glioblastoma Progression Dataset (Burdenko-GBM-Progression)",
+      "shortName": "Burdenko-GBM-Progression",
+      "year": 2023,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "CT / CTA"
+      ],
+      "clinicalPhases": [
+        "Early Post-Op",
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction"
+      ],
+      "cohortSize": 180,
+      "cohortDisplay": "180 primary GBM patients (RT planning + 1-8 follow-ups)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT"
+      ],
+      "accessTier": "Controlled DUA",
+      "license": "TCIA Restricted License",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/burdenko-gbm-progression/",
+      "paperUrl": "https://doi.org/10.7937/E1QP-D183",
+      "citation": {
+        "authors": "Zolotova, S. V. and Golanov, A. V. and Pronin, I. N. and Dalechina, A. V. and Nikolaeva, A. A. and Belyashova, A. S. and Usachev, D. Y. and Kondrateva, E. A. and Druzhinina, P. V. and Shirokikh, B. N. and Saparov, T. N. and Belyaev, M. G. and Kurmukov, A. I.",
+        "title": "Burdenko's Glioblastoma Progression Dataset (Burdenko-GBM-Progression)",
+        "venue": "TCIA",
+        "year": 2023,
+        "bibtexKey": "zolotova2023burdenkogbm",
+        "doi": "10.7937/E1QP-D183"
+      },
+      "fetchSnippet": "# CONTROLLED DUA (TCIA Limited Access — non-defaced head scans):\n# 1. Create a TCIA account and sign the TCIA Restricted License Agreement at:\n#    https://www.cancerimagingarchive.net/collection/burdenko-gbm-progression/\n# 2. Email the signed DUA to help@cancerimagingarchive.net for approval.\n# 3. Once approved, download the .tcia manifest and retrieve via NBIA Data Retriever:\nnbia-data-retriever --cli Burdenko-GBM-Progression.tcia -d ./data/burdenko-gbm-progression",
+      "highlights": "Unique neuro-oncology radiotherapy and longitudinal progression cohort of 180 primary GBM patients combining planning CT, 4-sequence MRI, full DICOM RTSTRUCT/RTPLAN/RTDOSE radiotherapy objects, 1-8 longitudinal follow-up scans, IDH/MGMT markers, and progression vs. pseudoprogression labels.",
+      "limitations": "Controlled DUA required via TCIA Restricted License because non-defaced structural head scans carry facial-reconstruction re-identification risk; single-center Russian cohort with variable follow-up counts and partial molecular completeness."
+    },
+    {
+      "id": "tcga-gbm",
+      "name": "The Cancer Genome Atlas Glioblastoma Multiforme (TCGA-GBM)",
+      "shortName": "TCGA-GBM",
+      "year": 2016,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Diffusion MRI / DTI",
+        "Perfusion MRI",
+        "Histopathology / WSI",
+        "Genomics / Omics"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Longitudinal",
+        "Pathology/Ex-Vivo"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction",
+        "Pathology / Tissue Classification"
+      ],
+      "cohortSize": 262,
+      "cohortDisplay": "262 patients on TCIA (paired GDC multi-omics & WSI)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels",
+        "Radiomics / Tabular Features"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "EGFR",
+        "TP53",
+        "ATRX",
+        "TERT",
+        "CDKN2A/B",
+        "DNA Methylation",
+        "RNA-Seq",
+        "WES / WGS",
+        "WHO Grade"
+      ],
+      "accessTier": "Controlled DUA",
+      "license": "TCIA Restricted License",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/tcga-gbm/",
+      "paperUrl": "https://doi.org/10.7937/K9/TCIA.2016.RNYFUYE9",
+      "citation": {
+        "authors": "Scarpace, L. and Mikkelsen, T. and Cha, S. and Rao, S. and Tekchandani, S. and Gutman, D. and Saltz, J. H. and Erickson, B. J. and Pedano, N. and Flanders, A. E. and Barnholtz-Sloan, J. and Ostrom, Q. and Barboriak, D. and Pierce, L. J.",
+        "title": "The Cancer Genome Atlas Glioblastoma Multiforme Collection (TCGA-GBM)",
+        "venue": "TCIA",
+        "year": 2016,
+        "bibtexKey": "scarpace2016tcgagbm",
+        "doi": "10.7937/K9/TCIA.2016.RNYFUYE9"
+      },
+      "fetchSnippet": "# CONTROLLED DUA (TCIA Limited Access — non-defaced head MRI):\n# 1. Sign and email the TCIA Restricted License Agreement to help@cancerimagingarchive.net\n#    via https://www.cancerimagingarchive.net/collection/tcga-gbm/\n# 2. Retrieve approved DICOM series via NBIA Data Retriever or authenticated tcia_utils:\nnbia-data-retriever --cli TCGA-GBM.tcia -d ./data/tcga-gbm\n# 3. Pair patient IDs with GDC genomics & WSI via https://portal.gdc.cancer.gov/projects/TCGA-GBM",
+      "highlights": "Foundational multi-institutional radiogenomics resource linking preoperative and follow-up glioblastoma MRI on TCIA directly to comprehensive NCI Genomic Data Commons DNA methylation, RNA-Seq, WES/WGS, clinical survival, and digital pathology slides.",
+      "limitations": "Moved to TCIA Limited Access (Controlled DUA) due to facial-reconstruction privacy policy on non-defaced head scans; legacy scanner heterogeneity, thick-slice 2D acquisitions, and pre-WHO-2021 diagnostic criteria require careful harmonization."
+    },
+    {
+      "id": "tcga-lgg",
+      "name": "The Cancer Genome Atlas Low Grade Glioma (TCGA-LGG)",
+      "shortName": "TCGA-LGG",
+      "year": 2016,
+      "pathologies": [
+        "Glioma / GBM"
+      ],
+      "modalities": [
+        "Structural MRI",
+        "Histopathology / WSI",
+        "Genomics / Omics"
+      ],
+      "clinicalPhases": [
+        "Pre-Op",
+        "Longitudinal",
+        "Pathology/Ex-Vivo"
+      ],
+      "tasks": [
+        "Tumor Segmentation",
+        "Survival / Outcome Prediction",
+        "Molecular / Radiogenomic Prediction",
+        "Tumor Classification / Grading"
+      ],
+      "cohortSize": 199,
+      "cohortDisplay": "199 patients on TCIA (paired GDC multi-omics & WSI)",
+      "annotations": [
+        "Voxel-wise Tumor Sub-regions",
+        "Clinical Outcomes / Survival",
+        "Molecular / Genetic Labels",
+        "Radiomics / Tabular Features"
+      ],
+      "molecularMarkers": [
+        "IDH",
+        "MGMT",
+        "1p/19q",
+        "ATRX",
+        "TP53",
+        "TERT",
+        "DNA Methylation",
+        "RNA-Seq",
+        "WES / WGS",
+        "WHO Grade"
+      ],
+      "accessTier": "Controlled DUA",
+      "license": "TCIA Restricted License",
+      "platform": "TCIA",
+      "url": "https://www.cancerimagingarchive.net/collection/tcga-lgg/",
+      "paperUrl": "https://doi.org/10.7937/K9/TCIA.2016.L4LTD3TK",
+      "citation": {
+        "authors": "Pedano, N. and Flanders, A. E. and Scarpace, L. and Mikkelsen, T. and Eschbacher, J. M. and Hermes, B. and Sisneros, V. and Barnholtz-Sloan, J. and Ostrom, Q.",
+        "title": "The Cancer Genome Atlas Low Grade Glioma Collection (TCGA-LGG)",
+        "venue": "TCIA",
+        "year": 2016,
+        "bibtexKey": "pedano2016tcgalgg",
+        "doi": "10.7937/K9/TCIA.2016.L4LTD3TK"
+      },
+      "fetchSnippet": "# CONTROLLED DUA (TCIA Limited Access — non-defaced head MRI):\n# 1. Sign and email the TCIA Restricted License Agreement to help@cancerimagingarchive.net\n#    via https://www.cancerimagingarchive.net/collection/tcga-lgg/\n# 2. Retrieve approved DICOM series via NBIA Data Retriever:\nnbia-data-retriever --cli TCGA-LGG.tcia -d ./data/tcga-lgg\n# 3. Pair patient IDs with GDC multi-omics & WSI via https://portal.gdc.cancer.gov/projects/TCGA-LGG",
+      "highlights": "Benchmarked radiogenomic lower-grade glioma (WHO grade II-III astrocytoma and oligodendroglioma) cohort pairing 199 TCIA MRI subjects with matched GDC IDH, 1p/19q codeletion, ATRX, methylation, RNA-Seq, and whole-slide histopathology profiles.",
+      "limitations": "Requires signed TCIA Restricted License DUA due to non-defaced head scans; missing MRI sequences in subsets, heterogeneous historical protocols, and pre-WHO-2021 grading mean some IDH-wildtype cases would now be reclassified as glioblastoma."
+    },
+    {
+      "id": "pitvis",
+      "name": "PitVis-2023 (Endoscopic Transsphenoidal Pituitary Surgery Workflow)",
+      "shortName": "PitVis",
+      "year": 2024,
+      "pathologies": [
+        "Pituitary & Sellar"
+      ],
+      "modalities": [
+        "Surgical Video"
+      ],
+      "clinicalPhases": [
+        "Intra-Op"
+      ],
+      "tasks": [
+        "Surgical Phase Recognition",
+        "Instrument / Tool Tracking"
+      ],
+      "cohortSize": 25,
+      "cohortDisplay": "25 endoscopic pituitary surgery videos",
+      "annotations": [
+        "Surgical Phase / Step Timestamps"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Open Access",
+      "license": "CC BY-NC-ND 4.0",
+      "platform": "Hugging Face",
+      "url": "https://huggingface.co/datasets/drdreets/PitVis-2023",
+      "paperUrl": "https://doi.org/10.1016/j.media.2025.103716",
+      "citation": {
+        "authors": "Das, Adrito and Khan, Danyal Z. and Psychogyios, Dimitrios and Zhang, Yitong and Hanrahan, John G. and Vasconcelos, Francisco and Stoyanov, Danail and Marcus, Hani J. and Bano, Sophia and others",
+        "title": "PitVis-2023 challenge: Workflow recognition in videos of endoscopic pituitary surgery",
+        "venue": "Medical Image Analysis",
+        "year": 2025,
+        "bibtexKey": "das2025pitvis",
+        "doi": "10.1016/j.media.2025.103716"
+      },
+      "fetchSnippet": "# Download PitVis-2023 endoscopic videos & step/instrument annotations from Hugging Face\npip install huggingface_hub\nhuggingface-cli download drdreets/PitVis-2023 --repo-type dataset --local-dir ./data/pitvis\n\n# Official archival mirror on UCL Research Data Repository (DOI: 10.5522/04/26531686)\n# Challenge portal: https://www.synapse.org/Synapse:syn51232283/wiki/621581\n# Baseline code: git clone https://github.com/dreets/pitvis",
+      "highlights": "First public MICCAI EndoVis neurosurgical video dataset pairing 25 full endoscopic transsphenoidal pituitary adenoma surgeries with dense temporal surgical step and instrument presence annotations for automated intraoperative workflow recognition.",
+      "limitations": "Single-center UK cohort (National Hospital for Neurology and Neurosurgery, London) with 25 procedures under a non-commercial, no-derivatives license (CC BY-NC-ND 4.0); annotations capture temporal presence rather than pixel-level instrument segmentation masks."
+    },
+    {
+      "id": "pitvqa",
+      "name": "PitVQA (Visual Question Answering in Endoscopic Pituitary Surgery)",
+      "shortName": "PitVQA",
+      "year": 2024,
+      "pathologies": [
+        "Pituitary & Sellar"
+      ],
+      "modalities": [
+        "Surgical Video"
+      ],
+      "clinicalPhases": [
+        "Intra-Op"
+      ],
+      "tasks": [
+        "Surgical Phase Recognition",
+        "Instrument / Tool Tracking",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "cohortSize": 25,
+      "cohortDisplay": "25 surgery videos (109,173 frames, 884,242 QA pairs)",
+      "annotations": [
+        "Surgical Phase / Step Timestamps",
+        "Clinical Reports / Structured EHR"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Open Access",
+      "license": "CC BY-NC-SA 4.0",
+      "platform": "Institutional Portal",
+      "url": "https://doi.org/10.5522/04/27004666",
+      "paperUrl": "https://doi.org/10.1007/978-3-031-72089-5_46",
+      "citation": {
+        "authors": "He, Runlong and Xu, Mengya and Das, Adrito and Khan, Danyal Z. and Bano, Sophia and Marcus, Hani J. and Stoyanov, Danail and Clarkson, Matthew J. and Islam, Mobarakol",
+        "title": "PitVQA: Image-grounded Text Embedding LLM for Visual Question Answering in Pituitary Surgery",
+        "venue": "MICCAI",
+        "year": 2024,
+        "bibtexKey": "he2024pitvqa",
+        "doi": "10.1007/978-3-031-72089-5_46"
+      },
+      "fetchSnippet": "# 1. Download the official PitVQA dataset from UCL Research Data Repository (CC BY-NC-SA 4.0)\n#    https://doi.org/10.5522/04/27004666\n\n# 2. Clone official PitVQA training and evaluation code\ngit clone --depth 1 https://github.com/mobarakol/PitVQA.git\n\n# 3. Optional Hugging Face community VLM repackaging:\n#    huggingface-cli download mmrech/pitvqa-unified-vlm --repo-type dataset --local-dir ./data/pitvqa",
+      "highlights": "Large-scale surgical vision-language benchmark derived from 25 endoscopic endonasal pituitary surgeries, pairing 109,173 validated 1 fps surgical frames with 884,242 question-answer pairs covering surgical phases, steps, tool positions, tissue interactions, and operative notes.",
+      "limitations": "Derived from the same single-center London surgical cohort of 25 videos as PitVis; template-structured frame-level QA pairs may exhibit linguistic homogeneity and non-commercial licensing (CC BY-NC-SA 4.0) restricts commercial deployment."
+    },
+    {
+      "id": "opensrh",
+      "name": "OpenSRH (Open Stimulated Raman Histology Intraoperative Brain Tumor Dataset)",
+      "shortName": "OpenSRH",
+      "year": 2022,
+      "pathologies": [
+        "Multi-Pathology",
+        "Glioma / GBM",
+        "Meningioma",
+        "Brain Metastases",
+        "Pituitary & Sellar",
+        "Skull Base / Schwannoma"
+      ],
+      "modalities": [
+        "Optical / Fluorescence",
+        "Histopathology / WSI"
+      ],
+      "clinicalPhases": [
+        "Intra-Op",
+        "Pathology/Ex-Vivo"
+      ],
+      "tasks": [
+        "Pathology / Tissue Classification",
+        "Tumor Classification / Grading",
+        "Tumor Segmentation",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "cohortSize": 307,
+      "cohortDisplay": "307 patients (304 intra-op + 3 postmortem, 1,300+ optical WSI)",
+      "annotations": [
+        "Histopathology / Region Labels"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Registration Required",
+      "license": "CC BY-NC-SA 4.0",
+      "platform": "Institutional Portal",
+      "url": "https://opensrh.mlins.org/",
+      "paperUrl": "https://arxiv.org/abs/2206.08439",
+      "citation": {
+        "authors": "Jiang, Cheng and Chowdury, Asadur and Hou, Xinhai and Kondepudi, Akhil and Freudiger, Christian W. and Conway, Kyle and Camelo-Piragua, Sandra and Orringer, Daniel A. and Lee, Honglak and Hollon, Todd C.",
+        "title": "OpenSRH: Optimizing Brain Tumor Surgery Using Intraoperative Stimulated Raman Histology",
+        "venue": "NeurIPS",
+        "year": 2022,
+        "bibtexKey": "jiang2022opensrh",
+        "doi": "10.48550/arXiv.2206.08439"
+      },
+      "fetchSnippet": "# 1. Submit the free academic access request form at https://opensrh.mlins.org/\n#    (CC BY-NC-SA 4.0 dataset download link delivered upon registration)\n\n# 2. Clone the official NeurIPS 2022 OpenSRH PyTorch benchmarks & patch loaders (MIT)\ngit clone --depth 1 https://github.com/MLNeurosurg/opensrh.git\ncd opensrh && pip install -e .",
+      "highlights": "First large-scale public intraoperative label-free optical imaging dataset using Stimulated Raman Histology (SRH), delivering over 1,300 whole-slide optical images from 307 patients spanning gliomas, meningiomas, metastases, pituitary adenomas, and schwannomas for real-time surgical AI diagnosis.",
+      "limitations": "Requires registration via institutional portal and non-commercial CC BY-NC-SA 4.0 terms; acquired exclusively on NIO Laser Imaging Systems with patch-level weak patient labels for most slides and no paired preoperative MRI."
+    },
+    {
+      "id": "atlas-v2",
+      "name": "ATLAS v2.0 (Anatomical Tracings of Lesions After Stroke)",
+      "shortName": "ATLAS v2.0",
+      "year": 2022,
+      "pathologies": [
+        "Stroke & ICH"
+      ],
+      "modalities": [
+        "Structural MRI"
+      ],
+      "clinicalPhases": [
+        "Longitudinal"
+      ],
+      "tasks": [
+        "Lesion / Hemorrhage Detection",
+        "Anatomy / Structure Segmentation",
+        "Foundation Representation / Self-Supervised"
+      ],
+      "cohortSize": 1271,
+      "cohortDisplay": "1,271 T1-weighted stroke MRI scans (44 research cohorts)",
+      "annotations": [
+        "Voxel-wise Lesion / Infarct Masks"
+      ],
+      "molecularMarkers": [],
+      "accessTier": "Controlled DUA",
+      "license": "Custom Academic DUA",
+      "platform": "Institutional Portal",
+      "url": "https://atlas.grand-challenge.org/",
+      "paperUrl": "https://doi.org/10.1038/s41597-022-01401-7",
+      "citation": {
+        "authors": "Liew, Sook-Lei and Lo, Bethany P. and Donnelly, Miranda R. and Zavaliangos-Petropulu, Artemis and Jeong, Jessica N. and Barisano, Giuseppe and Hutton, Alexandre and Simon, Julia P. and Juliano, Julia M. and Suri, Anisha and others",
+        "title": "A large, curated, open-source stroke neuroimaging dataset to improve lesion segmentation algorithms",
+        "venue": "Scientific Data",
+        "year": 2022,
+        "bibtexKey": "liew2022atlasv2",
+        "doi": "10.1038/s41597-022-01401-7"
+      },
+      "fetchSnippet": "# CONTROLLED DUA (INDI / USC Data Use Agreement):\n# 1. Review ATLAS v2.0 documentation at https://atlas.grand-challenge.org/ and https://github.com/npnl/ATLAS\n# 2. Submit the NITRC/INDI Data Use Agreement form at:\n#    https://fcon_1000.projects.nitrc.org/indi/retro/atlas_download.html\n# 3. After DUA approval, verify downloaded BIDS-structured NIfTI scans (655 labeled train, 300 test, 316 hidden):\npython -c \"import glob, nibabel as nib; imgs = glob.glob('./data/atlas-v2/**/*T1w.nii.gz', recursive=True); print(f'Loaded {len(imgs)} T1w volumes')\"",
+      "highlights": "Largest multi-site manually segmented chronic and subacute stroke lesion MRI dataset (1,271 T1w scans across 44 international ENIGMA cohorts: 33 train/test + 11 hidden generalizability cohorts), widely adopted alongside BraTS for neuro-foundation model pretraining, lesion-resilient brain parcellation, and cross-pathology generalization.",
+      "limitations": "Single-modality T1-weighted MRI only (lacking acute DWI/ADC or FLAIR sequences); access requires an institutional USC/INDI Data Use Agreement prohibiting redistribution, and acute ischemic/hemorrhagic strokes are underrepresented."
+    }
+  ]
+}

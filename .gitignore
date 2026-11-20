@@ -1,0 +1,63 @@
+# Python bytecode, caches & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# OS & desktop artifacts
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors & IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local environment, logs & temporary staging
+.env
+.env.local
+*.log
+_site/
+dist/
+tmp/
+scratch/
+downloads/
+
+# Node / JS tooling (project is zero-build, ignore if installed locally)
+node_modules/
+npm-debug.log*
+
+# Prevent accidental commits of neuroimaging volumes, video, or model weights
+*.nii
+*.nii.gz
+*.dcm
+*.mha
+*.mhd
+*.nrrd
+*.svs
+*.ndpi
+*.h5
+*.hdf5
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.mp4
+*.avi
+*.mkv
+*.zip
+*.tar
+*.tar.gz
+*.tgz

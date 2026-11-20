@@ -1,0 +1,86 @@
+name: Validate Registry & Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Least-privilege defaults; deploy elevates only what GitHub Pages requires.
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Registry Schema & Integrity
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: validate-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12 (stdlib only — zero pip installs)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify core static site files exist
+        run: |
+          for path in \
+            index.html \
+            schemas/registry-schema.json \
+            data/datasets.json \
+            data/models.json \
+            data/challenges.json \
+            tests/validate_registry.py; do
+            if [ ! -f "$path" ]; then
+              echo "::error::Missing required repository file: $path"
+              exit 1
+            fi
+          done
+
+      - name: Run OpenNeuroAtlas registry validator
+        run: python tests/validate_registry.py
+
+  deploy:
+    name: Deploy Static Atlas to GitHub Pages
+    needs: validate
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Disable Jekyll processing for zero-build static serving
+        run: touch .nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
