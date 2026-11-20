@@ -115,25 +115,6 @@ python -m http.server 8000
 
 ---
 
-## Zero-Build GitHub Pages Deployment
-
-Deployment is fully automated via [`.github/workflows/pages.yml`](.github/workflows/pages.yml):
-
-1. **`validate` job** *(runs on every `pull_request` and `push` to `main`, plus manual `workflow_dispatch`)*:
-   - Sets up Python 3.12 (zero `pip install`), verifies core static entrypoints, and runs `python tests/validate_registry.py`.
-   - Blocks malformed JSON, unknown fields, controlled-vocabulary typos, duplicate IDs or `bibtexKey`s, non-HTTPS/placeholder URLs, and inconsistent model weight metadata from merging into `main`.
-2. **`deploy` job** *(runs on `main` only after `validate` succeeds)*:
-   - Adds `.nojekyll` so static assets are served verbatim without Jekyll processing.
-   - Uploads the static repository artifact (`actions/upload-pages-artifact@v3`) and publishes directly to GitHub Pages (`actions/deploy-pages@v4`) with zero build or bundling step.
-
-### Enabling GitHub Pages on a Fork
-
-1. Push the repository to GitHub with `main` as the default branch.
-2. Open **Settings → Pages → Build and deployment**.
-3. Set **Source** to **GitHub Actions**. Every merge to `main` will automatically validate and publish the live Atlas.
-
----
-
 ## Contributing
 
 Community contributions of new datasets, foundation models, clinical toolkits, and benchmarks are warmly welcomed:
@@ -151,7 +132,7 @@ If OpenNeuroAtlas supports your systematic review, benchmark design, or clinical
 
 ```bibtex
 @software{openneuroatlas2026,
-  author  = {{OpenNeuroAtlas Contributors}},
+  author  = {{Prajwal Ghimire}},
   title   = {{OpenNeuroAtlas}: A Living Open-Science Registry for Neurosurgery, Neuroimaging, Neuro-Oncology, and Surgical {AI}},
   year    = {2026},
   version = {1.0.0},
