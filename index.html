@@ -73,56 +73,61 @@
       </div>
 
       <!-- Primary View Navigation -->
-      <nav class="primary-nav" aria-label="Primary observatory views" role="tablist">
-        <button
-          type="button"
-          class="nav-tab is-active"
-          role="tab"
-          aria-selected="true"
-          aria-controls="view-explorer"
-          data-view="explorer"
-        >
-          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-            <rect x="2.5" y="3" width="6" height="6" rx="1.4" />
-            <rect x="11.5" y="3" width="6" height="6" rx="1.4" />
-            <rect x="2.5" y="11" width="6" height="6" rx="1.4" />
-            <rect x="11.5" y="11" width="6" height="6" rx="1.4" />
-          </svg>
-          <span>Explore Catalog</span>
-        </button>
-        <button
-          type="button"
-          class="nav-tab"
-          role="tab"
-          aria-selected="false"
-          aria-controls="view-analytics"
-          data-view="analytics"
-        >
-          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-            <path d="M3 16.5h14" stroke-linecap="round" />
-            <rect x="4" y="10" width="3" height="6.5" rx="0.8" />
-            <rect x="8.5" y="6.5" width="3" height="10" rx="0.8" />
-            <rect x="13" y="3.5" width="3" height="13" rx="0.8" />
-          </svg>
-          <span>Coverage &amp; Gap Observatory</span>
-        </button>
-        <button
-          type="button"
-          class="nav-tab"
-          role="tab"
-          aria-selected="false"
-          aria-controls="view-contribute"
-          data-view="contribute"
-        >
-          <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-            <circle cx="5.5" cy="5" r="2" />
-            <circle cx="5.5" cy="15" r="2" />
-            <circle cx="14.5" cy="15" r="2" />
-            <path d="M5.5 7v6M14.5 13V8.5a3 3 0 0 0-3-3H9" stroke-linecap="round" />
-            <path d="M10.5 3.5L8.5 5.5l2 2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span>Contribute via PR</span>
-        </button>
+      <nav aria-label="Primary observatory views">
+        <div class="primary-nav" role="tablist" aria-label="Observatory views">
+          <button
+            type="button"
+            id="view-tab-explorer"
+            class="nav-tab is-active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="view-explorer"
+            data-view="explorer"
+          >
+            <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <rect x="2.5" y="3" width="6" height="6" rx="1.4" />
+              <rect x="11.5" y="3" width="6" height="6" rx="1.4" />
+              <rect x="2.5" y="11" width="6" height="6" rx="1.4" />
+              <rect x="11.5" y="11" width="6" height="6" rx="1.4" />
+            </svg>
+            <span>Explore Catalog</span>
+          </button>
+          <button
+            type="button"
+            id="view-tab-analytics"
+            class="nav-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="view-analytics"
+            data-view="analytics"
+          >
+            <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <path d="M3 16.5h14" stroke-linecap="round" />
+              <rect x="4" y="10" width="3" height="6.5" rx="0.8" />
+              <rect x="8.5" y="6.5" width="3" height="10" rx="0.8" />
+              <rect x="13" y="3.5" width="3" height="13" rx="0.8" />
+            </svg>
+            <span>Coverage &amp; Gap Observatory</span>
+          </button>
+          <button
+            type="button"
+            id="view-tab-contribute"
+            class="nav-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="view-contribute"
+            data-view="contribute"
+          >
+            <svg class="icon-sm" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <circle cx="5.5" cy="5" r="2" />
+              <circle cx="5.5" cy="15" r="2" />
+              <circle cx="14.5" cy="15" r="2" />
+              <path d="M5.5 7v6M14.5 13V8.5a3 3 0 0 0-3-3H9" stroke-linecap="round" />
+              <path d="M10.5 3.5L8.5 5.5l2 2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Contribute via PR</span>
+          </button>
+        </div>
       </nav>
 
       <!-- Header Utility Controls -->
@@ -234,7 +239,52 @@
     <!-- =================================================================== -->
     <!-- VIEW 1: EXPLORE CATALOG                                             -->
     <!-- =================================================================== -->
-    <section id="view-explorer" class="view-panel" role="tabpanel" aria-label="Explore Catalog">
+    <section id="view-explorer" class="view-panel" role="tabpanel" aria-labelledby="view-tab-explorer">
+      <!-- 1-Click Research Lens / Curated Preset Strip -->
+      <div class="lens-strip" role="region" aria-label="Curated 1-click research lenses">
+        <div class="lens-strip-header">
+          <span class="lens-strip-label">
+            <svg class="icon-xs" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="10" cy="10" r="7" />
+              <circle cx="10" cy="10" r="2.6" />
+              <path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke-linecap="round" />
+            </svg>
+            <span>Research Lenses</span>
+          </span>
+          <span class="lens-strip-hint">1-click multi-facet presets for clinical &amp; AI workflows</span>
+        </div>
+        <div id="research-lens-strip" class="lens-pills-row" role="group" aria-label="Filter catalog by research lens">
+          <button type="button" class="lens-pill" data-lens-id="all" aria-pressed="false">
+            <span>All Resources</span>
+            <span class="lens-count mono" data-lens-count="all">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="intraop-brainshift" aria-pressed="false">
+            <span>Intra-Op &amp; Brain Shift</span>
+            <span class="lens-count mono" data-lens-count="intraop-brainshift">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="post-treatment" aria-pressed="false">
+            <span>Post-Treatment Longitudinal</span>
+            <span class="lens-count mono" data-lens-count="post-treatment">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="molecular-radiogenomics" aria-pressed="false">
+            <span>Molecular / Radiogenomics</span>
+            <span class="lens-count mono" data-lens-count="molecular-radiogenomics">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="surgical-video-optical" aria-pressed="false">
+            <span>Surgical Video &amp; Optical</span>
+            <span class="lens-count mono" data-lens-count="surgical-video-optical">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="open-foundation-weights" aria-pressed="false">
+            <span>Open Foundation Weights</span>
+            <span class="lens-count mono" data-lens-count="open-foundation-weights">&mdash;</span>
+          </button>
+          <button type="button" class="lens-pill" data-lens-id="global-pediatric-equity" aria-pressed="false">
+            <span>Global &amp; Pediatric Equity</span>
+            <span class="lens-count mono" data-lens-count="global-pediatric-equity">&mdash;</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Sub-tabs & Search Toolbar -->
       <div class="catalog-header">
         <div class="subtab-bar" role="tablist" aria-label="Resource collections">
@@ -322,6 +372,18 @@
               </button>
             </div>
 
+            <button
+              type="button"
+              id="btn-share-view"
+              class="btn btn-secondary btn-sm btn-share-view"
+              title="Copy shareable URL encoding active tab, search query, and selected facet filters"
+            >
+              <svg class="icon-xs" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M8.2 11.8l3.6-3.6M6.8 13.2l-1.5 1.5a2.8 2.8 0 0 1-4-4L2.8 9.2m10.4-2.4 1.5-1.5a2.8 2.8 0 0 1 4 4l-1.5 1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span id="share-view-label">Copy Shareable View Link</span>
+            </button>
+
             <div class="toolbar-export-group">
               <button type="button" id="btn-export-filtered-bib" class="btn btn-ghost btn-sm" title="Download BibTeX for current filtered view">
                 .bib
@@ -381,7 +443,7 @@
     <!-- =================================================================== -->
     <!-- VIEW 2: COVERAGE & GAP OBSERVATORY (PURE SVG ANALYTICS)             -->
     <!-- =================================================================== -->
-    <section id="view-analytics" class="view-panel" role="tabpanel" aria-label="Coverage and Gap Observatory" hidden>
+    <section id="view-analytics" class="view-panel" role="tabpanel" aria-labelledby="view-tab-analytics" hidden>
       <div class="section-intro">
         <div>
           <span class="section-kicker">Interactive Open-Data Telemetry</span>
@@ -467,7 +529,7 @@
     <!-- =================================================================== -->
     <!-- VIEW 3: CONTRIBUTE VIA PR (SCHEMA-DRIVEN BUILDER)                   -->
     <!-- =================================================================== -->
-    <section id="view-contribute" class="view-panel" role="tabpanel" aria-label="Contribute via Pull Request" hidden>
+    <section id="view-contribute" class="view-panel" role="tabpanel" aria-labelledby="view-tab-contribute" hidden>
       <div class="section-intro">
         <div>
           <span class="section-kicker kicker-emerald">Schema-Validated Contribution Workbench</span>

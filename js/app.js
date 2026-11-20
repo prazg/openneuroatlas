@@ -19,6 +19,7 @@ import {
   computeFacetCounts,
   computeAnalytics,
   extractRecordYear,
+  RESEARCH_LENSES,
 } from './registryEngine.js';
 
 import {
@@ -76,9 +77,22 @@ const state = {
   detailRecordId: null,
   detailCiteTab: 'bibtex', // 'bibtex' | 'ris' | 'apa'
   compareModalOpen: false,
+  detailTriggerEl: null,
+  compareTriggerEl: null,
+  mobileFilterTriggerEl: null,
+  shareResetTimer: null,
   prBuilderCtrl: null,
   currentFilteredRecords: [],
 };
+
+const VALID_SORT_KEYS = new Set([
+  'year-desc',
+  'cohort-desc',
+  'openness',
+  'name-asc',
+  'year-asc',
+  'relevance',
+]);
 
 /**
  * Cached DOM references
@@ -111,6 +125,7 @@ function cacheDom() {
     'view-explorer',
     'view-analytics',
     'view-contribute',
+    'research-lens-strip',
     'tab-count-datasets',
     'tab-count-models',
     'tab-count-challenges',
@@ -122,6 +137,8 @@ function cacheDom() {
     'catalog-sort',
     'btn-layout-cards',
     'btn-layout-table',
+    'btn-share-view',
+    'share-view-label',
     'btn-export-filtered-bib',
     'btn-export-filtered-csv',
     'explorer-layout',
@@ -284,10 +301,52 @@ function toggleTheme() {
 }
 
 /* ==========================================================================
-   URL Hash Deep-Linking
+   URL Hash Deep-Linking & Shareable View Serialization
    ========================================================================== */
 
+function sanitizeFiltersForTab(filters) {
+  if (!filters || typeof filters !== 'object') return;
+  const tab = filters.tab;
+  if (tab === 'datasets') {
+    filters.modelCategories = [];
+    filters.hasOpenWeights = false;
+    filters.challengeStatuses = [];
+    filters.metrics = [];
+  } else if (tab === 'models') {
+    filters.accessTiers = [];
+    filters.clinicalPhases = [];
+    filters.platforms = [];
+    filters.tasks = [];
+    filters.annotations = [];
+    filters.molecularMarkers = [];
+    filters.hasMolecular = false;
+    filters.hasLongitudinal = false;
+    filters.openAccessOnly = false;
+    filters.challengeStatuses = [];
+    filters.metrics = [];
+  } else if (tab === 'challenges') {
+    filters.accessTiers = [];
+    filters.clinicalPhases = [];
+    filters.annotations = [];
+    filters.molecularMarkers = [];
+    filters.hasMolecular = false;
+    filters.hasLongitudinal = false;
+    filters.openAccessOnly = false;
+    filters.modelCategories = [];
+    filters.hasOpenWeights = false;
+  }
+}
+
 function hydrateStateFromHash() {
+  state.activeView = 'explorer';
+  state.displayMode = 'cards';
+  state.filters = {
+    ...createInitialFilterState(),
+    tab: 'datasets',
+  };
+  state.userSelectedSort = false;
+  state.detailRecordId = null;
+
   const rawHash = window.location.hash.replace(/^#/, '');
   if (!rawHash) return;
 
@@ -312,6 +371,7 @@ function hydrateStateFromHash() {
     ['tier', 'accessTiers'],
     ['platform', 'platforms'],
     ['task', 'tasks'],
+    ['annotation', 'annotations'],
     ['marker', 'molecularMarkers'],
     ['category', 'modelCategories'],
     ['status', 'challengeStatuses'],
@@ -319,7 +379,7 @@ function hydrateStateFromHash() {
   ];
 
   for (const [paramName, stateKey] of arrayKeys) {
-    const vals = params.getAll(paramName).filter(Boolean);
+    const vals = Array.from(new Set(params.getAll(paramName).filter(Boolean)));
     if (vals.length > 0) {
       state.filters[stateKey] = vals;
     }
@@ -329,9 +389,23 @@ function hydrateStateFromHash() {
   if (params.get('longitudinal') === '1') state.filters.hasLongitudinal = true;
   if (params.get('weights') === '1') state.filters.hasOpenWeights = true;
   if (params.get('openAccess') === '1') state.filters.openAccessOnly = true;
+  if (params.get('equity') === '1') state.filters.hasEquityFocus = true;
 
   const yr = params.get('year');
   if (yr && /^\d{4}$/.test(yr)) state.filters.year = Number(yr);
+
+  const sortParam = params.get('sort');
+  if (sortParam && VALID_SORT_KEYS.has(sortParam)) {
+    state.filters.sortBy = sortParam;
+    state.userSelectedSort = true;
+  }
+
+  const layoutParam = params.get('layout');
+  if (layoutParam === 'table' || layoutParam === 'cards') {
+    state.displayMode = layoutParam;
+  }
+
+  sanitizeFiltersForTab(state.filters);
 
   const recId = params.get('record');
   if (recId) state.detailRecordId = recId;
@@ -350,6 +424,7 @@ function syncHashFromState() {
     state.filters.accessTiers.forEach((v) => params.append('tier', v));
     state.filters.platforms.forEach((v) => params.append('platform', v));
     state.filters.tasks.forEach((v) => params.append('task', v));
+    state.filters.annotations.forEach((v) => params.append('annotation', v));
     state.filters.molecularMarkers.forEach((v) => params.append('marker', v));
     state.filters.modelCategories.forEach((v) => params.append('category', v));
     state.filters.challengeStatuses.forEach((v) => params.append('status', v));
@@ -358,7 +433,14 @@ function syncHashFromState() {
     if (state.filters.hasLongitudinal) params.set('longitudinal', '1');
     if (state.filters.hasOpenWeights) params.set('weights', '1');
     if (state.filters.openAccessOnly) params.set('openAccess', '1');
+    if (state.filters.hasEquityFocus) params.set('equity', '1');
     if (state.filters.year) params.set('year', String(state.filters.year));
+    if (state.userSelectedSort && state.filters.sortBy !== 'year-desc') {
+      params.set('sort', state.filters.sortBy);
+    }
+    if (state.displayMode === 'table') {
+      params.set('layout', 'table');
+    }
   }
 
   if (state.detailRecordId) {
@@ -373,6 +455,58 @@ function syncHashFromState() {
       // ignore in restricted contexts
     }
   }
+  return nextHash;
+}
+
+function syncDisplayModeButtons() {
+  const isTable = state.displayMode === 'table';
+  dom['btn-layout-cards']?.classList.toggle('is-active', !isTable);
+  dom['btn-layout-cards']?.setAttribute('aria-pressed', String(!isTable));
+  dom['btn-layout-table']?.classList.toggle('is-active', isTable);
+  dom['btn-layout-table']?.setAttribute('aria-pressed', String(isTable));
+}
+
+async function copyShareableViewLink() {
+  const hash = syncHashFromState();
+  const base =
+    window.location.origin && window.location.origin !== 'null'
+      ? `${window.location.origin}${window.location.pathname}${window.location.search}`
+      : window.location.href.split('#')[0];
+  const shareUrl = `${base}${hash}`;
+
+  const ok = await copyToClipboard(shareUrl);
+  if (!ok) {
+    showToast('Unable to copy shareable link to clipboard.', 'error');
+    return;
+  }
+
+  const btn = dom['btn-share-view'];
+  const label = dom['share-view-label'];
+  if (btn && label) {
+    btn.classList.add('is-copied');
+    label.textContent = 'Copied Link!';
+    if (state.shareResetTimer) clearTimeout(state.shareResetTimer);
+    state.shareResetTimer = setTimeout(() => {
+      btn.classList.remove('is-copied');
+      label.textContent = 'Copy Shareable View Link';
+      state.shareResetTimer = null;
+    }, 1800);
+  }
+
+  const activeCount = countActiveFilters();
+  const tabLabel =
+    state.filters.tab === 'datasets'
+      ? 'Datasets'
+      : state.filters.tab === 'models'
+        ? 'Models & Toolkits'
+        : state.filters.tab === 'challenges'
+          ? 'MICCAI Challenges'
+          : 'All Resources';
+  const summaryNote =
+    activeCount > 0
+      ? `${tabLabel} + ${activeCount} active filter${activeCount === 1 ? '' : 's'}`
+      : `${tabLabel} view`;
+  showToast(`Copied shareable link (${summaryNote}) to clipboard.`);
 }
 
 /* ==========================================================================
@@ -498,6 +632,7 @@ function countActiveFilters() {
   count += f.accessTiers.length;
   count += f.platforms.length;
   count += f.tasks.length;
+  count += f.annotations.length;
   count += f.molecularMarkers.length;
   count += f.modelCategories.length;
   count += f.challengeStatuses.length;
@@ -506,14 +641,15 @@ function countActiveFilters() {
   if (f.hasLongitudinal) count += 1;
   if (f.hasOpenWeights) count += 1;
   if (f.openAccessOnly) count += 1;
+  if (f.hasEquityFocus) count += 1;
   if (f.year) count += 1;
   return count;
 }
 
 /**
- * Jump directly to Explore Catalog with a clean filter payload (from Heatmap, Charts, KPIs, or Gap Cards).
+ * Jump directly to Explore Catalog with a clean filter payload (from Heatmap, Charts, KPIs, Lenses, or Gap Cards).
  */
-function jumpToCatalogWithFilters(payload = {}) {
+function jumpToCatalogWithFilters(payload = {}, { scrollToTop = true } = {}) {
   const next = createInitialFilterState();
   next.tab = payload.tab || 'datasets';
   if (payload.query) next.query = String(payload.query);
@@ -522,19 +658,134 @@ function jumpToCatalogWithFilters(payload = {}) {
   if (Array.isArray(payload.clinicalPhases)) next.clinicalPhases = [...payload.clinicalPhases];
   if (Array.isArray(payload.accessTiers)) next.accessTiers = [...payload.accessTiers];
   if (Array.isArray(payload.platforms)) next.platforms = [...payload.platforms];
+  if (Array.isArray(payload.tasks)) next.tasks = [...payload.tasks];
+  if (Array.isArray(payload.annotations)) next.annotations = [...payload.annotations];
+  if (Array.isArray(payload.molecularMarkers)) next.molecularMarkers = [...payload.molecularMarkers];
+  if (Array.isArray(payload.modelCategories)) next.modelCategories = [...payload.modelCategories];
+  if (Array.isArray(payload.challengeStatuses)) next.challengeStatuses = [...payload.challengeStatuses];
+  if (Array.isArray(payload.metrics)) next.metrics = [...payload.metrics];
   if (payload.hasMolecular) next.hasMolecular = true;
   if (payload.hasLongitudinal) next.hasLongitudinal = true;
   if (payload.hasOpenWeights) next.hasOpenWeights = true;
   if (payload.openAccessOnly) next.openAccessOnly = true;
+  if (payload.hasEquityFocus) next.hasEquityFocus = true;
   if (payload.year) next.year = Number(payload.year);
+  sanitizeFiltersForTab(next);
 
   state.filters = next;
-  state.userSelectedSort = false;
+  state.userSelectedSort = Boolean(payload.sortBy && VALID_SORT_KEYS.has(payload.sortBy));
+  if (state.userSelectedSort) {
+    state.filters.sortBy = payload.sortBy;
+  }
   if (dom['catalog-search']) dom['catalog-search'].value = next.query;
-  if (dom['catalog-sort']) dom['catalog-sort'].value = next.query ? 'relevance' : 'year-desc';
+  if (dom['catalog-sort']) {
+    dom['catalog-sort'].value = state.userSelectedSort
+      ? state.filters.sortBy
+      : next.query
+        ? 'relevance'
+        : 'year-desc';
+  }
 
-  setActiveView('explorer', { scrollToTop: true });
+  setActiveView('explorer', { scrollToTop });
   renderCatalog();
+}
+
+/* ==========================================================================
+   1-Click Research Lens / Curated Preset Strip
+   ========================================================================== */
+
+const LENS_ARRAY_KEYS = [
+  'pathologies',
+  'modalities',
+  'clinicalPhases',
+  'accessTiers',
+  'platforms',
+  'tasks',
+  'annotations',
+  'molecularMarkers',
+  'modelCategories',
+  'challengeStatuses',
+  'metrics',
+];
+
+const LENS_BOOL_KEYS = [
+  'hasMolecular',
+  'hasLongitudinal',
+  'hasOpenWeights',
+  'openAccessOnly',
+  'hasEquityFocus',
+];
+
+function sameStringSet(a = [], b = []) {
+  if (a.length !== b.length) return false;
+  const setB = new Set(b);
+  return a.every((v) => setB.has(v));
+}
+
+function detectActiveLensId() {
+  const f = state.filters;
+  if (f.query.trim() || f.year) return null;
+
+  for (const lens of RESEARCH_LENSES) {
+    const p = lens.payload;
+    if (f.tab !== (p.tab || 'all')) continue;
+    let matches = true;
+    for (const k of LENS_ARRAY_KEYS) {
+      if (!sameStringSet(f[k] || [], p[k] || [])) {
+        matches = false;
+        break;
+      }
+    }
+    if (!matches) continue;
+    for (const bk of LENS_BOOL_KEYS) {
+      if (Boolean(f[bk]) !== Boolean(p[bk])) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) return lens.id;
+  }
+  return null;
+}
+
+function populateResearchLensCounts() {
+  const strip = dom['research-lens-strip'];
+  if (!strip || !state.registry) return;
+  const { allRecords } = state.registry;
+
+  for (const lens of RESEARCH_LENSES) {
+    const lensQuery = { ...createInitialFilterState(), ...lens.payload };
+    const count = filterAndSortRecords(allRecords, lensQuery).length;
+    const countEl = strip.querySelector(`[data-lens-count="${CSS.escape(lens.id)}"]`);
+    if (countEl) countEl.textContent = String(count);
+    const btn = strip.querySelector(`[data-lens-id="${CSS.escape(lens.id)}"]`);
+    if (btn && lens.description) btn.title = lens.description;
+  }
+}
+
+function renderResearchLensState() {
+  const strip = dom['research-lens-strip'];
+  if (!strip) return;
+  const activeLensId = detectActiveLensId();
+  strip.querySelectorAll('[data-lens-id]').forEach((btn) => {
+    const isActive = btn.getAttribute('data-lens-id') === activeLensId;
+    btn.classList.toggle('is-active', isActive);
+    btn.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+function applyResearchLens(lensId) {
+  const lens = RESEARCH_LENSES.find((l) => l.id === lensId);
+  if (!lens) return;
+  const currentActive = detectActiveLensId();
+  // Clicking an already-active specialized lens resets cleanly to All Resources
+  if (currentActive === lensId && lensId !== 'all') {
+    jumpToCatalogWithFilters({ tab: 'all' }, { scrollToTop: false });
+    showToast('Cleared research lens — showing all resources.');
+    return;
+  }
+  jumpToCatalogWithFilters(lens.payload, { scrollToTop: false });
+  showToast(`Applied "${lens.label}" research lens.`);
 }
 
 /* ==========================================================================
@@ -586,6 +837,7 @@ function renderCatalog() {
     dom['btn-reset-sidebar-filters'].hidden = activeCount === 0;
   }
 
+  renderResearchLensState();
   renderFacetSidebar(facetCounts, schema);
   renderActiveFilterChips();
 
@@ -641,6 +893,11 @@ function renderFacetSidebar(facetCounts, schema) {
       count: toggles.hasOpenWeights || 0,
     });
   }
+  toggleDefs.push({
+    key: 'hasEquityFocus',
+    label: 'Pediatric & Global Equity',
+    count: toggles.hasEquityFocus || 0,
+  });
 
   const togglesHtml =
     toggleDefs.length > 0
@@ -706,6 +963,13 @@ function renderFacetSidebar(facetCounts, schema) {
           : Array.from(new Set([...(vocab.datasetPlatforms || []), ...(vocab.challengePlatforms || [])]));
     groups.push({ key: 'platforms', title: 'Hosting Platform', terms: platTerms });
     groups.push({ key: 'tasks', title: 'AI / Clinical Tasks', terms: vocab.tasks || [] });
+  }
+  if (tab === 'datasets' || tab === 'all') {
+    groups.push({
+      key: 'annotations',
+      title: 'Annotations & Labels',
+      terms: vocab.annotations || [],
+    });
   }
   if (tab === 'datasets') {
     groups.push({
@@ -786,40 +1050,44 @@ function renderActiveFilterChips() {
   const f = state.filters;
 
   if (f.query.trim()) {
-    chips.push({ cat: 'Search', label: `"${f.query.trim()}"`, action: 'clear-query', value: '' });
+    chips.push({ cat: 'Search', label: `"${f.query.trim()}"`, action: 'clear-query', value: '', tone: 'chip-emerald' });
   }
   if (f.year) {
-    chips.push({ cat: 'Year', label: String(f.year), action: 'clear-year', value: '' });
+    chips.push({ cat: 'Year', label: String(f.year), action: 'clear-year', value: '', tone: 'chip-amber' });
   }
   if (f.hasMolecular) {
-    chips.push({ cat: 'Toggle', label: 'Molecular Markers', action: 'clear-toggle', value: 'hasMolecular' });
+    chips.push({ cat: 'Toggle', label: 'Molecular Markers', action: 'clear-toggle', value: 'hasMolecular', tone: 'chip-violet' });
   }
   if (f.hasLongitudinal) {
-    chips.push({ cat: 'Toggle', label: 'Longitudinal', action: 'clear-toggle', value: 'hasLongitudinal' });
+    chips.push({ cat: 'Toggle', label: 'Longitudinal', action: 'clear-toggle', value: 'hasLongitudinal', tone: 'chip-emerald' });
   }
   if (f.hasOpenWeights) {
-    chips.push({ cat: 'Toggle', label: 'Open Weights', action: 'clear-toggle', value: 'hasOpenWeights' });
+    chips.push({ cat: 'Toggle', label: 'Open Weights', action: 'clear-toggle', value: 'hasOpenWeights', tone: 'chip-emerald' });
   }
   if (f.openAccessOnly) {
-    chips.push({ cat: 'Toggle', label: 'Open Access Only', action: 'clear-toggle', value: 'openAccessOnly' });
+    chips.push({ cat: 'Toggle', label: 'Open Access Only', action: 'clear-toggle', value: 'openAccessOnly', tone: 'chip-emerald' });
+  }
+  if (f.hasEquityFocus) {
+    chips.push({ cat: 'Toggle', label: 'Global & Pediatric Equity', action: 'clear-toggle', value: 'hasEquityFocus', tone: 'chip-emerald' });
   }
 
   const facetLabels = [
-    ['accessTiers', 'Access'],
-    ['modalities', 'Modality'],
-    ['pathologies', 'Pathology'],
-    ['clinicalPhases', 'Phase'],
-    ['platforms', 'Platform'],
-    ['modelCategories', 'Category'],
-    ['challengeStatuses', 'Status'],
-    ['tasks', 'Task'],
-    ['molecularMarkers', 'Biomarker'],
-    ['metrics', 'Metric'],
+    ['accessTiers', 'Access', 'chip-emerald'],
+    ['modalities', 'Modality', ''],
+    ['pathologies', 'Pathology', 'chip-neutral'],
+    ['clinicalPhases', 'Phase', 'chip-amber'],
+    ['platforms', 'Platform', 'chip-neutral'],
+    ['modelCategories', 'Category', ''],
+    ['challengeStatuses', 'Status', 'chip-emerald'],
+    ['tasks', 'Task', 'chip-neutral'],
+    ['annotations', 'Annotation', 'chip-neutral'],
+    ['molecularMarkers', 'Biomarker', 'chip-violet'],
+    ['metrics', 'Metric', 'chip-amber'],
   ];
 
-  for (const [key, cat] of facetLabels) {
+  for (const [key, cat, tone] of facetLabels) {
     for (const val of f[key] || []) {
-      chips.push({ cat, label: val, action: 'remove-facet', key, value: val });
+      chips.push({ cat, label: val, action: 'remove-facet', key, value: val, tone });
     }
   }
 
@@ -831,25 +1099,27 @@ function renderActiveFilterChips() {
 
   bar.hidden = false;
   bar.innerHTML = `
+    <span class="active-filters-label mono">Active (${chips.length})</span>
     ${chips
       .map(
         (c) => `
-      <span class="active-chip">
+      <button
+        type="button"
+        class="active-chip${c.tone ? ` ${c.tone}` : ''}"
+        aria-label="Remove ${esc(c.cat)} filter: ${esc(c.label)}"
+        title="Click to remove ${esc(c.cat)} filter: ${esc(c.label)}"
+        data-chip-action="${esc(c.action)}"
+        data-chip-key="${esc(c.key || '')}"
+        data-chip-value="${esc(c.value || '')}"
+      >
         <span class="active-chip-cat">${esc(c.cat)}:</span>
         <span>${esc(c.label)}</span>
-        <button
-          type="button"
-          class="active-chip-remove"
-          aria-label="Remove ${esc(c.cat)} filter ${esc(c.label)}"
-          data-chip-action="${c.action}"
-          data-chip-key="${esc(c.key || '')}"
-          data-chip-value="${esc(c.value || '')}"
-        >&times;</button>
-      </span>
+        <span class="active-chip-x" aria-hidden="true">&times;</span>
+      </button>
     `
       )
       .join('')}
-    <button type="button" class="clear-all-chip" data-chip-action="clear-all">Clear Filters</button>
+    <button type="button" class="clear-all-chip" data-chip-action="clear-all">Clear All</button>
   `;
 }
 
@@ -858,18 +1128,33 @@ function renderResultsList(records) {
   if (!container) return;
 
   if (records.length === 0) {
-    const isModPathGap =
-      state.filters.modalities.length === 1 && state.filters.pathologies.length === 1;
-    const mod = state.filters.modalities[0];
-    const path = state.filters.pathologies[0];
+    const f = state.filters;
+    const isPureModPathSlice =
+      !f.query.trim() &&
+      f.modalities.length === 1 &&
+      f.pathologies.length === 1 &&
+      f.clinicalPhases.length === 0 &&
+      f.tasks.length === 0 &&
+      f.annotations.length === 0 &&
+      f.molecularMarkers.length === 0 &&
+      !f.hasMolecular &&
+      !f.hasLongitudinal &&
+      !f.hasEquityFocus &&
+      !f.year;
+    const mod = f.modalities[0];
+    const path = f.pathologies[0];
+    const isOpenAccessFiltered =
+      f.openAccessOnly || (f.accessTiers.length === 1 && f.accessTiers[0] === 'Open Access');
 
-    if (isModPathGap) {
+    if (isPureModPathSlice) {
+      const targetNoun = f.tab === 'all' ? 'resources' : f.tab;
+      const openQualifier = isOpenAccessFiltered ? 'direct Open-Access ' : 'cataloged ';
       container.innerHTML = `
         <div class="empty-state is-gap-state">
           <span class="pill pill-dua">0-Count White-Space Open-Data Gap</span>
-          <h3>No cataloged ${esc(state.filters.tab === 'all' ? 'resources' : state.filters.tab)} for ${esc(mod)} &times; ${esc(path)}</h3>
+          <h3>No ${esc(openQualifier)}${esc(targetNoun)} for ${esc(mod)} &times; ${esc(path)}</h3>
           <p>
-            This exact Modality &times; Pathology intersection currently represents a documented open-science blind spot in OpenNeuroAtlas. Know of a public dataset, benchmark, or open-source model covering this gap?
+            This Modality &times; Pathology slice currently represents ${isOpenAccessFiltered ? 'an open-access availability bottleneck' : 'a documented open-science blind spot'} in OpenNeuroAtlas. Know of a public dataset, benchmark, or open-source model covering this gap?
           </p>
           <div class="empty-state-actions">
             <button type="button" class="btn btn-primary" data-empty-action="propose-gap">
@@ -922,9 +1207,14 @@ function renderResourceCardHtml(record) {
         ? `${record.cohortSize.toLocaleString()} pts`
         : record.cohortDisplay?.slice(0, 26) || 'Cohort';
     const molTags = Array.isArray(record.molecularMarkers) ? record.molecularMarkers : [];
+    const dsTasks = Array.isArray(record.tasks) ? record.tasks : [];
+    const primaryTaskSummary =
+      dsTasks.length > 0
+        ? `${dsTasks[0]}${dsTasks.length > 1 ? ` +${dsTasks.length - 1}` : ''}`
+        : null;
 
     return `
-      <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}">
+      <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}" data-card-type="datasets">
         <div class="card-top-row">
           <div class="card-badges-left">
             ${typeBadgeHtml}
@@ -948,6 +1238,11 @@ function renderResourceCardHtml(record) {
               ? `<p class="card-subtitle">${esc(record.name)}</p>`
               : ''
           }
+        </div>
+
+        <div class="card-meta-line">
+          <span class="card-meta-item">License: <strong class="mono">${esc(record.license)}</strong></span>
+          ${primaryTaskSummary ? `<span class="card-meta-item">Tasks: <strong>${esc(primaryTaskSummary)}</strong></span>` : ''}
         </div>
 
         <div class="tag-cloud" aria-label="Modalities, pathologies and phases">
@@ -1015,7 +1310,7 @@ function renderResourceCardHtml(record) {
   if (type === 'models') {
     const repoHref = safeHref(record.repoUrl);
     return `
-      <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}">
+      <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}" data-card-type="models">
         <div class="card-top-row">
           <div class="card-badges-left">
             ${typeBadgeHtml}
@@ -1085,8 +1380,13 @@ function renderResourceCardHtml(record) {
   // Challenge card
   const isActiveChal = record.status === 'Active / Recurring';
   const challengeHref = safeHref(record.url);
+  const chalTasks = Array.isArray(record.tasks) ? record.tasks : [];
+  const chalTaskSummary =
+    chalTasks.length > 0
+      ? `${chalTasks[0]}${chalTasks.length > 1 ? ` +${chalTasks.length - 1}` : ''}`
+      : null;
   return `
-    <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}">
+    <article class="resource-card${isPinned ? ' is-pinned' : ''}" data-record-id="${esc(record.id)}" data-card-type="challenges">
       <div class="card-top-row">
         <div class="card-badges-left">
           ${typeBadgeHtml}
@@ -1106,6 +1406,12 @@ function renderResourceCardHtml(record) {
         </h3>
         <p class="card-subtitle">${esc(record.organizer)}</p>
       </div>
+
+      ${
+        chalTaskSummary
+          ? `<div class="card-meta-line"><span class="card-meta-item">Tasks: <strong>${esc(chalTaskSummary)}</strong></span></div>`
+          : ''
+      }
 
       <div class="tag-cloud">
         ${(record.modalities || []).map((m) => `<span class="tag tag-modality">${esc(m)}</span>`).join('')}
@@ -1422,12 +1728,89 @@ function renderComparatorDock() {
 }
 
 /* ==========================================================================
+   Focus Trap & Accessible Tablist Helpers
+   ========================================================================== */
+
+function getFocusableElements(container) {
+  if (!container) return [];
+  const selector = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',');
+  return Array.from(container.querySelectorAll(selector)).filter(
+    (el) => el instanceof HTMLElement && !el.hidden && el.offsetParent !== null
+  );
+}
+
+function trapFocusInContainer(e, container) {
+  if (e.key !== 'Tab' || !container) return;
+  const focusable = getFocusableElements(container);
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+
+  if (e.shiftKey) {
+    if (active === first || !container.contains(active)) {
+      e.preventDefault();
+      last.focus();
+    }
+  } else if (active === last || !container.contains(active)) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
+function restoreElementFocus(el) {
+  if (el instanceof HTMLElement && el.isConnected) {
+    requestAnimationFrame(() => {
+      if (el.isConnected && el.offsetParent !== null) {
+        el.focus();
+      }
+    });
+  }
+}
+
+function wireTablistArrowNavigation(tablistEl) {
+  if (!tablistEl) return;
+  tablistEl.addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    const tabs = Array.from(tablistEl.querySelectorAll('[role="tab"]:not([disabled])'));
+    if (tabs.length < 2) return;
+    const currentIdx = tabs.indexOf(document.activeElement);
+    if (currentIdx === -1) return;
+
+    e.preventDefault();
+    let nextIdx = currentIdx;
+    if (e.key === 'ArrowRight') nextIdx = (currentIdx + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft') nextIdx = (currentIdx - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') nextIdx = 0;
+    else if (e.key === 'End') nextIdx = tabs.length - 1;
+
+    const targetTab = tabs[nextIdx];
+    if (targetTab instanceof HTMLElement) {
+      targetTab.focus();
+      targetTab.click();
+    }
+  });
+}
+
+/* ==========================================================================
    Detail Modal (Full Metadata, Limitations, Starter Snippet, Citations)
    ========================================================================== */
 
 function openDetailModal(recordId, { focusCitations = false } = {}) {
   const record = state.registry?.byId.get(recordId);
   if (!record || !dom['detail-modal']) return;
+
+  const wasHidden = dom['detail-modal'].hidden;
+  if (wasHidden && document.activeElement instanceof HTMLElement) {
+    state.detailTriggerEl = document.activeElement;
+  }
 
   state.detailRecordId = recordId;
   state.detailCiteTab = 'bibtex';
@@ -1650,18 +2033,25 @@ function openDetailModal(recordId, { focusCitations = false } = {}) {
     showToast(`Downloaded ${fname}`);
   });
 
+  wireTablistArrowNavigation(dom['detail-modal-body'].querySelector('.citation-tabs'));
+
   dom['detail-modal'].hidden = false;
   document.body.classList.add('modal-open');
   syncHashFromState();
 
   if (focusCitations) {
     requestAnimationFrame(() => {
-      dom['detail-modal-body']
-        .querySelector('#detail-citation-section')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const citeSec = dom['detail-modal-body'].querySelector('#detail-citation-section');
+      citeSec?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const copyBtn = dom['detail-modal-body'].querySelector('#btn-detail-copy-cite');
+      if (copyBtn instanceof HTMLElement) copyBtn.focus();
+      else dom['detail-modal-close']?.focus();
     });
   } else {
     dom['detail-modal-body'].scrollTop = 0;
+    requestAnimationFrame(() => {
+      dom['detail-modal-close']?.focus();
+    });
   }
 }
 
@@ -1703,6 +2093,9 @@ function closeDetailModal() {
   state.detailRecordId = null;
   if (!state.compareModalOpen) document.body.classList.remove('modal-open');
   syncHashFromState();
+  const trigger = state.detailTriggerEl;
+  state.detailTriggerEl = null;
+  restoreElementFocus(trigger);
 }
 
 /* ==========================================================================
@@ -1712,10 +2105,16 @@ function closeDetailModal() {
 function openCompareModal() {
   const selected = getSelectedRecords();
   if (selected.length === 0 || !dom['compare-modal']) return;
+  if (dom['compare-modal'].hidden && document.activeElement instanceof HTMLElement) {
+    state.compareTriggerEl = document.activeElement;
+  }
   state.compareModalOpen = true;
   renderCompareModalBody();
   dom['compare-modal'].hidden = false;
   document.body.classList.add('modal-open');
+  requestAnimationFrame(() => {
+    dom['compare-modal-close']?.focus();
+  });
 }
 
 function renderCompareModalBody() {
@@ -1797,9 +2196,18 @@ function renderCompareModalBody() {
       },
     },
     {
-      label: 'Annotations / Tasks',
+      label: 'Supported Tasks',
       render: (r) => {
-        const list = r.annotations || r.tasks || [];
+        const list = Array.isArray(r.tasks) ? r.tasks : [];
+        return list.length > 0
+          ? `<div class="tag-cloud">${list.map((v) => `<span class="tag">${esc(v)}</span>`).join('')}</div>`
+          : '<span style="color:var(--text-muted);">—</span>';
+      },
+    },
+    {
+      label: 'Annotations & Labels',
+      render: (r) => {
+        const list = Array.isArray(r.annotations) ? r.annotations : [];
         return list.length > 0
           ? `<div class="tag-cloud">${list.map((v) => `<span class="tag">${esc(v)}</span>`).join('')}</div>`
           : '<span style="color:var(--text-muted);">—</span>';
@@ -1821,13 +2229,14 @@ function renderCompareModalBody() {
           : '<span style="color:var(--text-muted);">—</span>',
     },
     {
-      label: 'Links',
+      label: 'Actions & Links',
       render: (r) => {
         const primaryHref = safeHref(getPrimaryUrl(r));
         const paperHref = safeHref(r.paperUrl);
         return `
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          ${primaryHref ? `<a href="${esc(primaryHref)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-xs">Source &#8599;</a>` : ''}
+          <button type="button" class="btn btn-secondary btn-xs" data-compare-details="${esc(r.id)}">Details</button>
+          ${primaryHref ? `<a href="${esc(primaryHref)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-xs">Source &#8599;</a>` : ''}
           ${paperHref ? `<a href="${esc(paperHref)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-xs">Paper &#8599;</a>` : ''}
         </div>
       `;
@@ -1846,8 +2255,10 @@ function renderCompareModalBody() {
       <th>
         <div class="compare-col-head">
           <div class="compare-col-head-top">
-            <span class="compare-col-title">${esc(rec.shortName || rec.name)}</span>
-            <button type="button" class="btn btn-ghost btn-xs" data-compare-remove="${esc(rec.id)}" title="Remove from pinned">&times;</button>
+            <button type="button" class="compare-col-title-btn" data-compare-details="${esc(rec.id)}" title="Inspect full metadata &amp; snippet">
+              ${esc(rec.shortName || rec.name)}
+            </button>
+            <button type="button" class="btn btn-ghost btn-xs" data-compare-remove="${esc(rec.id)}" aria-label="Remove ${esc(rec.shortName || rec.name)} from comparison" title="Remove from pinned">&times;</button>
           </div>
           ${rec.shortName && rec.shortName !== rec.name ? `<span style="font-size:0.74rem;font-weight:400;color:var(--text-muted);">${esc(rec.name)}</span>` : ''}
         </div>
@@ -1888,6 +2299,9 @@ function closeCompareModal() {
   dom['compare-modal'].hidden = true;
   state.compareModalOpen = false;
   if (!state.detailRecordId) document.body.classList.remove('modal-open');
+  const trigger = state.compareTriggerEl;
+  state.compareTriggerEl = null;
+  restoreElementFocus(trigger);
 }
 
 /* ==========================================================================
@@ -1898,23 +2312,69 @@ function isMobileViewport() {
   return window.matchMedia('(max-width: 960px)').matches;
 }
 
+function syncFilterToggleAria() {
+  const expanded = isMobileViewport() ? state.filtersOpenMobile : !state.filtersCollapsedDesktop;
+  dom['btn-toggle-filters']?.setAttribute('aria-expanded', String(expanded));
+}
+
 function toggleFilterSidebar() {
   if (isMobileViewport()) {
-    state.filtersOpenMobile = !state.filtersOpenMobile;
-    dom['filter-sidebar']?.classList.toggle('is-mobile-open', state.filtersOpenMobile);
-    if (dom['mobile-filter-scrim']) dom['mobile-filter-scrim'].hidden = !state.filtersOpenMobile;
-    dom['btn-toggle-filters']?.setAttribute('aria-expanded', String(state.filtersOpenMobile));
+    const nextOpen = !state.filtersOpenMobile;
+    if (nextOpen && document.activeElement instanceof HTMLElement) {
+      state.mobileFilterTriggerEl = document.activeElement;
+    }
+    state.filtersOpenMobile = nextOpen;
+    dom['filter-sidebar']?.classList.toggle('is-mobile-open', nextOpen);
+    if (dom['mobile-filter-scrim']) dom['mobile-filter-scrim'].hidden = !nextOpen;
+    syncFilterToggleAria();
+    if (nextOpen) {
+      requestAnimationFrame(() => {
+        dom['btn-close-filters-mobile']?.focus();
+      });
+    }
   } else {
     state.filtersCollapsedDesktop = !state.filtersCollapsedDesktop;
     dom['explorer-layout']?.classList.toggle('filters-collapsed', state.filtersCollapsedDesktop);
-    dom['btn-toggle-filters']?.setAttribute('aria-expanded', String(!state.filtersCollapsedDesktop));
+    syncFilterToggleAria();
   }
 }
 
-function closeMobileFilterDrawer() {
+function closeMobileFilterDrawer({ restoreFocus = true } = {}) {
+  if (!state.filtersOpenMobile) return;
   state.filtersOpenMobile = false;
   dom['filter-sidebar']?.classList.remove('is-mobile-open');
   if (dom['mobile-filter-scrim']) dom['mobile-filter-scrim'].hidden = true;
+  syncFilterToggleAria();
+  const trigger = state.mobileFilterTriggerEl;
+  state.mobileFilterTriggerEl = null;
+  if (restoreFocus) restoreElementFocus(trigger);
+}
+
+function applyHashChangeToUi() {
+  if (!state.registry) return;
+  hydrateStateFromHash();
+  if (dom['catalog-search']) dom['catalog-search'].value = state.filters.query;
+  if (dom['catalog-sort']) {
+    dom['catalog-sort'].value = state.userSelectedSort
+      ? state.filters.sortBy
+      : state.filters.query.trim()
+        ? 'relevance'
+        : 'year-desc';
+  }
+  syncDisplayModeButtons();
+  renderCatalog();
+  setActiveView(state.activeView);
+
+  if (state.detailRecordId && state.registry.byId.has(state.detailRecordId)) {
+    openDetailModal(state.detailRecordId);
+  } else {
+    state.detailRecordId = null;
+    if (dom['detail-modal'] && !dom['detail-modal'].hidden) {
+      dom['detail-modal'].hidden = true;
+      if (!state.compareModalOpen) document.body.classList.remove('modal-open');
+    }
+    syncHashFromState();
+  }
 }
 
 /* ==========================================================================
@@ -1931,13 +2391,25 @@ function wireGlobalEvents() {
     showToast(ok ? 'Copied `python -m http.server 8000` to clipboard.' : 'Copy failed.', ok ? 'success' : 'error');
   });
 
-  // Primary View Navigation
+  // Primary View Navigation & Tablist Arrow Keys
   document.querySelectorAll('.nav-tab[data-view]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.getAttribute('data-view');
       if (target) setActiveView(target);
     });
   });
+  wireTablistArrowNavigation(document.querySelector('.primary-nav'));
+  wireTablistArrowNavigation(document.querySelector('.subtab-bar'));
+
+  // 1-Click Research Lens / Curated Preset Strip
+  dom['research-lens-strip']?.addEventListener('click', (e) => {
+    const btn = e.target instanceof HTMLElement ? e.target.closest('[data-lens-id]') : null;
+    const lensId = btn?.getAttribute('data-lens-id');
+    if (lensId) applyResearchLens(lensId);
+  });
+
+  // Copy Shareable View Link
+  dom['btn-share-view']?.addEventListener('click', copyShareableViewLink);
 
   // Interactive KPI strip clicks
   document.querySelectorAll('.kpi-card[data-kpi-action]').forEach((card) => {
@@ -1956,12 +2428,11 @@ function wireGlobalEvents() {
     });
   });
 
-  // Brand link returns cleanly to Explore Catalog
+  // Brand link returns cleanly to Explore Catalog (resets stranded filters)
   document.querySelector('.brand-link')?.addEventListener('click', (e) => {
     e.preventDefault();
     setActiveView('explorer', { scrollToTop: true });
-    state.filters.tab = 'datasets';
-    renderCatalog();
+    clearAllFilters({ preserveTab: false });
   });
 
   // Catalog sub-tabs (preserve shared query/modality/pathology/year; clear incompatible collection-only facets)
@@ -1970,32 +2441,7 @@ function wireGlobalEvents() {
       const tab = btn.getAttribute('data-catalog-tab');
       if (!tab || tab === state.filters.tab) return;
       state.filters.tab = tab;
-      if (tab === 'datasets') {
-        state.filters.modelCategories = [];
-        state.filters.hasOpenWeights = false;
-        state.filters.challengeStatuses = [];
-        state.filters.metrics = [];
-      } else if (tab === 'models') {
-        state.filters.accessTiers = [];
-        state.filters.clinicalPhases = [];
-        state.filters.platforms = [];
-        state.filters.tasks = [];
-        state.filters.molecularMarkers = [];
-        state.filters.hasMolecular = false;
-        state.filters.hasLongitudinal = false;
-        state.filters.openAccessOnly = false;
-        state.filters.challengeStatuses = [];
-        state.filters.metrics = [];
-      } else if (tab === 'challenges') {
-        state.filters.accessTiers = [];
-        state.filters.clinicalPhases = [];
-        state.filters.molecularMarkers = [];
-        state.filters.hasMolecular = false;
-        state.filters.hasLongitudinal = false;
-        state.filters.openAccessOnly = false;
-        state.filters.modelCategories = [];
-        state.filters.hasOpenWeights = false;
-      }
+      sanitizeFiltersForTab(state.filters);
       renderCatalog();
     });
   });
@@ -2028,27 +2474,32 @@ function wireGlobalEvents() {
 
   // Filter collapse / mobile drawer
   dom['btn-toggle-filters']?.addEventListener('click', toggleFilterSidebar);
-  dom['btn-close-filters-mobile']?.addEventListener('click', closeMobileFilterDrawer);
-  dom['mobile-filter-scrim']?.addEventListener('click', closeMobileFilterDrawer);
+  dom['btn-close-filters-mobile']?.addEventListener('click', () => closeMobileFilterDrawer());
+  dom['mobile-filter-scrim']?.addEventListener('click', () => closeMobileFilterDrawer());
   dom['btn-reset-sidebar-filters']?.addEventListener('click', () => clearAllFilters({ preserveTab: true }));
+
+  const mobileMql = window.matchMedia('(max-width: 960px)');
+  mobileMql.addEventListener('change', (e) => {
+    if (!e.matches && state.filtersOpenMobile) {
+      closeMobileFilterDrawer({ restoreFocus: false });
+    } else {
+      syncFilterToggleAria();
+    }
+  });
 
   // Layout switcher (Cards vs Table)
   dom['btn-layout-cards']?.addEventListener('click', () => {
     state.displayMode = 'cards';
-    dom['btn-layout-cards']?.classList.add('is-active');
-    dom['btn-layout-cards']?.setAttribute('aria-pressed', 'true');
-    dom['btn-layout-table']?.classList.remove('is-active');
-    dom['btn-layout-table']?.setAttribute('aria-pressed', 'false');
+    syncDisplayModeButtons();
     renderResultsList(state.currentFilteredRecords);
+    syncHashFromState();
   });
 
   dom['btn-layout-table']?.addEventListener('click', () => {
     state.displayMode = 'table';
-    dom['btn-layout-table']?.classList.add('is-active');
-    dom['btn-layout-table']?.setAttribute('aria-pressed', 'true');
-    dom['btn-layout-cards']?.classList.remove('is-active');
-    dom['btn-layout-cards']?.setAttribute('aria-pressed', 'false');
+    syncDisplayModeButtons();
     renderResultsList(state.currentFilteredRecords);
+    syncHashFromState();
   });
 
   // Export filtered view (.bib / .csv)
@@ -2246,9 +2697,19 @@ function wireGlobalEvents() {
     if (e.target === dom['compare-modal']) closeCompareModal();
   });
   dom['compare-modal-body']?.addEventListener('click', (e) => {
-    const btn = e.target instanceof HTMLElement ? e.target.closest('[data-compare-remove]') : null;
-    const id = btn?.getAttribute('data-compare-remove');
-    if (id) togglePinRecord(id);
+    const target = e.target instanceof HTMLElement ? e.target : null;
+    if (!target) return;
+    const removeBtn = target.closest('[data-compare-remove]');
+    if (removeBtn) {
+      const id = removeBtn.getAttribute('data-compare-remove');
+      if (id) togglePinRecord(id);
+      return;
+    }
+    const detailBtn = target.closest('[data-compare-details]');
+    if (detailBtn) {
+      const id = detailBtn.getAttribute('data-compare-details');
+      if (id) openDetailModal(id);
+    }
   });
 
   dom['btn-compare-copy-md']?.addEventListener('click', async () => {
@@ -2279,22 +2740,54 @@ function wireGlobalEvents() {
     showToast('Downloaded openneuroatlas-comparison.bib');
   });
 
-  // Global Keyboard Shortcuts: `/` search, `Escape` close modal/drawer, `t` theme toggle
+  // External URL hash navigation (Back/Forward or pasted shareable links)
+  window.addEventListener('hashchange', applyHashChangeToUi);
+
+  // Global Keyboard Shortcuts: Tab focus trap, `/` search, `Escape` close modal/drawer, `t` theme toggle
   document.addEventListener('keydown', (e) => {
-    const tag = document.activeElement?.tagName?.toLowerCase();
+    if (e.key === 'Tab') {
+      if (state.detailRecordId && dom['detail-modal'] && !dom['detail-modal'].hidden) {
+        trapFocusInContainer(e, dom['detail-modal']);
+        return;
+      }
+      if (state.compareModalOpen && dom['compare-modal'] && !dom['compare-modal'].hidden) {
+        trapFocusInContainer(e, dom['compare-modal']);
+        return;
+      }
+      if (state.filtersOpenMobile && dom['filter-sidebar']) {
+        trapFocusInContainer(e, dom['filter-sidebar']);
+        return;
+      }
+    }
+
+    const activeEl = document.activeElement;
+    const tag = activeEl?.tagName?.toLowerCase();
     const isTyping =
       tag === 'input' ||
       tag === 'textarea' ||
       tag === 'select' ||
-      document.activeElement?.isContentEditable;
+      activeEl?.isContentEditable;
 
     if (e.key === 'Escape') {
-      if (state.compareModalOpen) {
-        closeCompareModal();
-      } else if (state.detailRecordId) {
+      if (state.detailRecordId && dom['detail-modal'] && !dom['detail-modal'].hidden) {
+        e.preventDefault();
         closeDetailModal();
+      } else if (state.compareModalOpen) {
+        e.preventDefault();
+        closeCompareModal();
       } else if (state.filtersOpenMobile) {
+        e.preventDefault();
         closeMobileFilterDrawer();
+      } else if (activeEl === dom['catalog-search']) {
+        e.preventDefault();
+        if (state.filters.query) {
+          state.filters.query = '';
+          dom['catalog-search'].value = '';
+          if (!state.userSelectedSort) state.filters.sortBy = 'year-desc';
+          renderCatalog();
+        } else {
+          dom['catalog-search'].blur();
+        }
       }
       return;
     }
@@ -2302,7 +2795,9 @@ function wireGlobalEvents() {
     if (isTyping || e.metaKey || e.ctrlKey || e.altKey) return;
 
     if (e.key === '/') {
+      if (state.detailRecordId || state.compareModalOpen) return;
       e.preventDefault();
+      if (state.filtersOpenMobile) closeMobileFilterDrawer({ restoreFocus: false });
       if (state.activeView !== 'explorer') {
         setActiveView('explorer');
       }
@@ -2323,6 +2818,8 @@ async function boot() {
   applyTheme(getCurrentTheme(), false);
   wireGlobalEvents();
   hydrateStateFromHash();
+  syncFilterToggleAria();
+  syncDisplayModeButtons();
 
   try {
     const registry = await loadRegistry('./');
@@ -2330,9 +2827,13 @@ async function boot() {
     state.analytics = computeAnalytics(registry);
 
     renderHeaderAndKpis();
+    populateResearchLensCounts();
 
-    if (dom['catalog-search'] && state.filters.query) {
+    if (dom['catalog-search']) {
       dom['catalog-search'].value = state.filters.query;
+    }
+    if (dom['catalog-sort'] && state.userSelectedSort) {
+      dom['catalog-sort'].value = state.filters.sortBy;
     }
 
     renderCatalog();
@@ -2341,8 +2842,9 @@ async function boot() {
 
     if (state.detailRecordId && registry.byId.has(state.detailRecordId)) {
       openDetailModal(state.detailRecordId);
-    } else {
+    } else if (state.detailRecordId) {
       state.detailRecordId = null;
+      syncHashFromState();
     }
   } catch (err) {
     if (dom['catalog-loading']) dom['catalog-loading'].hidden = true;

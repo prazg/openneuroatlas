@@ -228,7 +228,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
   const marginLeft = 188;
   const marginTop = 128;
   const marginRight = 92;
-  const marginBottom = 46;
+  const marginBottom = 74;
   const cellW = 46;
   const cellH = 30;
   const cellGap = 4;
@@ -259,6 +259,10 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
     }
     return sum;
   });
+
+  const colHeaderGroups = [];
+  const rowHeaderGroups = [];
+  const rowBgRects = [];
 
   modalities.forEach((mod, colIdx) => {
     const cx = marginLeft + colIdx * (cellW + cellGap) + cellW / 2;
@@ -296,6 +300,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
       `,
       () => options.onAxisClick?.('modality', mod)
     );
+    colHeaderGroups.push(g);
     svg.appendChild(g);
   });
 
@@ -340,6 +345,18 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
     const extraY = multiIdx > 0 && rowIdx >= multiIdx ? multiExtraGap : 0;
     const y = marginTop + rowIdx * (cellH + cellGap) + extraY;
     const isPathActive = activePaths.has(path);
+
+    // Subtle full-row crosshair band
+    const rowBg = svgEl('rect', {
+      class: 'svg-row-bg',
+      x: 8,
+      y: y - 1.5,
+      width: totalW - 16,
+      height: cellH + 3,
+      rx: 5,
+    });
+    rowBgRects.push(rowBg);
+    svg.appendChild(rowBg);
 
     // Row label (Pathology)
     const rowLabelG = svgEl('g', {
@@ -389,6 +406,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
       `,
       () => options.onAxisClick?.('pathology', path)
     );
+    rowHeaderGroups.push(rowLabelG);
     svg.appendChild(rowLabelG);
 
     // Row cells
@@ -424,7 +442,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
           ? 'var(--accent-cyan)'
           : isGap
             ? 'var(--heat-0-stroke)'
-            : 'transparent',
+            : 'var(--heat-cell-stroke)',
         'stroke-width': isSelected ? '2.2' : '1',
       };
       if (isGap && !isSelected) {
@@ -447,6 +465,16 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
           String(val)
         )
       );
+
+      const setCrosshair = (active) => {
+        rowBgRects[rowIdx]?.classList.toggle('is-crosshair-row', active);
+        rowHeaderGroups[rowIdx]?.classList.toggle('is-crosshair-axis', active);
+        colHeaderGroups[colIdx]?.classList.toggle('is-crosshair-axis', active);
+      };
+      cellG.addEventListener('mouseenter', () => setCrosshair(true));
+      cellG.addEventListener('mouseleave', () => setCrosshair(false));
+      cellG.addEventListener('focus', () => setCrosshair(true));
+      cellG.addEventListener('blur', () => setCrosshair(false));
 
       wireInteractiveSvgNode(
         cellG,
@@ -475,9 +503,47 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
     );
   });
 
-  // Bottom Legend Bar
-  const legendY = marginTop + gridH + 18;
-  const legendG = svgEl('g', { transform: `translate(${marginLeft}, ${legendY})` });
+  // Bottom Modality Column Sums Row
+  const colSumY = marginTop + gridH + 17;
+  svg.appendChild(
+    svgEl(
+      'text',
+      {
+        x: marginLeft - 12,
+        y: colSumY,
+        'text-anchor': 'end',
+        fill: 'var(--chart-axis)',
+        'font-size': '10.2',
+        'font-weight': '700',
+        'letter-spacing': '0.04em',
+      },
+      'DISEASE SUM'
+    )
+  );
+  colTotals.forEach((cSum, colIdx) => {
+    const cx = marginLeft + colIdx * (cellW + cellGap) + cellW / 2;
+    svg.appendChild(
+      svgEl(
+        'text',
+        {
+          x: cx,
+          y: colSumY,
+          'text-anchor': 'middle',
+          fill: cSum > 0 ? 'var(--text-secondary)' : 'var(--text-faint)',
+          'font-family': 'var(--font-mono)',
+          'font-size': '11',
+          'font-weight': cSum > 0 ? '700' : '500',
+        },
+        String(cSum)
+      )
+    );
+  });
+
+  // Bottom Legend Bar (spans full SVG width to prevent text/swatch collision)
+  const legendPadX = 14;
+  const legendY = marginTop + gridH + 38;
+  const legendSpanW = totalW - legendPadX * 2;
+  const legendG = svgEl('g', { transform: `translate(${legendPadX}, ${legendY})` });
 
   // 0-gap swatch
   legendG.appendChild(
@@ -511,9 +577,9 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
   ];
   let lx = 228;
   legendG.appendChild(
-    svgEl('text', { x: lx, y: 11.5, fill: 'var(--chart-axis)', 'font-size': '11' }, 'Density:')
+    svgEl('text', { x: lx, y: 11.5, fill: 'var(--chart-axis)', 'font-size': '11', 'font-weight': '600' }, 'Density:')
   );
-  lx += 48;
+  lx += 52;
 
   steps.forEach((s) => {
     legendG.appendChild(
@@ -524,6 +590,8 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
         height: 15,
         rx: 3,
         fill: `var(--heat-${s.step})`,
+        stroke: 'var(--heat-cell-stroke)',
+        'stroke-width': '1',
       })
     );
     legendG.appendChild(
@@ -533,7 +601,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
         s.label
       )
     );
-    lx += 54;
+    lx += 55;
   });
 
   // Summary coverage ratio on far right of legend
@@ -544,7 +612,7 @@ export function renderCoverageHeatmap(container, analytics, activeFilters = {}, 
     svgEl(
       'text',
       {
-        x: gridW,
+        x: legendSpanW,
         y: 11.5,
         'text-anchor': 'end',
         fill: 'var(--text-muted)',
@@ -635,7 +703,7 @@ export function renderCohortSizeChart(container, analytics, activeFilters = {}, 
   const maxCohort = Math.max(...bars.map((b) => b.cohortSize), 10);
 
   const marginLeft = 148;
-  const marginRight = 64;
+  const marginRight = 72;
   const marginTop = 18;
   const marginBottom = 34;
   const rowH = 27;

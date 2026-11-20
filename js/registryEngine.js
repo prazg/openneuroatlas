@@ -114,6 +114,104 @@ const LOW_FIELD_REGEX =
 const AFRICA_LMIC_REGEX =
   /\b(africa|african|sub[- ]saharan|ssa\b|lmic|low[- ]and[- ]middle[- ]income|global south|brats[- ]africa|nigeria|kenya|uganda|ghana|ethiopia|south africa)\b/i;
 
+const GLOBAL_EQUITY_REGEX =
+  /\b(federated|global[- ]equity|under[- ]represented|decentralized)\b/i;
+
+/**
+ * Curated 1-click Research Lenses mapping common neurosurgery & neuroimaging
+ * investigation workflows onto smart multi-facet filter payloads.
+ */
+export const RESEARCH_LENSES = Object.freeze([
+  {
+    id: 'all',
+    label: 'All Resources',
+    description: 'Browse all indexed datasets, foundation models, clinical toolkits, and MICCAI benchmarks',
+    payload: Object.freeze({
+      tab: 'all',
+    }),
+  },
+  {
+    id: 'intraop-brainshift',
+    label: 'Intra-Op & Brain Shift',
+    description: 'Intraoperative ultrasound cohorts, brain-shift registration challenges, and neuronavigation toolkits',
+    payload: Object.freeze({
+      tab: 'all',
+      modalities: Object.freeze(['Intra-Op Ultrasound']),
+    }),
+  },
+  {
+    id: 'post-treatment',
+    label: 'Post-Treatment Longitudinal',
+    description: 'Early post-operative and longitudinal follow-up cohorts for resection cavity and recurrence/survival modeling',
+    payload: Object.freeze({
+      tab: 'datasets',
+      clinicalPhases: Object.freeze(['Early Post-Op', 'Longitudinal']),
+      tasks: Object.freeze(['Resection Cavity Segmentation', 'Survival / Outcome Prediction']),
+    }),
+  },
+  {
+    id: 'molecular-radiogenomics',
+    label: 'Molecular / Radiogenomics',
+    description: 'IDH, MGMT, 1p/19q, and multi-omic radiogenomic glioma cohorts and benchmarks',
+    payload: Object.freeze({
+      tab: 'all',
+      pathologies: Object.freeze(['Glioma / GBM']),
+      tasks: Object.freeze(['Molecular / Radiogenomic Prediction']),
+    }),
+  },
+  {
+    id: 'surgical-video-optical',
+    label: 'Surgical Video & Optical',
+    description: 'Endoscopic surgical workflow video datasets, label-free Raman optical histology, and surgical vision models',
+    payload: Object.freeze({
+      tab: 'all',
+      modalities: Object.freeze(['Surgical Video', 'Optical / Fluorescence']),
+    }),
+  },
+  {
+    id: 'open-foundation-weights',
+    label: 'Open Foundation Weights',
+    description: 'Pretrained 3D neuroimaging and surgical vision foundation models with downloadable checkpoints',
+    payload: Object.freeze({
+      tab: 'models',
+      modelCategories: Object.freeze(['Foundation Model', 'Surgical Vision']),
+      hasOpenWeights: true,
+    }),
+  },
+  {
+    id: 'global-pediatric-equity',
+    label: 'Global & Pediatric Equity',
+    description: 'Sub-Saharan African / LMIC cohorts, low-field MRI, federated benchmarks, and pediatric neuro-oncology resources',
+    payload: Object.freeze({
+      tab: 'all',
+      hasEquityFocus: true,
+    }),
+  },
+]);
+
+/**
+ * Determine whether a record belongs to the Global, Low-Field, Federated & Pediatric Equity lens.
+ * @param {object} item
+ * @returns {boolean}
+ */
+export function matchesEquityFocus(item) {
+  if (!item || typeof item !== 'object') return false;
+  if (
+    Array.isArray(item.pathologies) &&
+    item.pathologies.some((p) => typeof p === 'string' && p.toLowerCase() === 'pediatric tumors')
+  ) {
+    return true;
+  }
+  const text = [item.id, item.name, item.shortName, item.highlights, item.limitations]
+    .filter((v) => typeof v === 'string' && v.trim())
+    .join(' ');
+  return (
+    AFRICA_LMIC_REGEX.test(text) ||
+    LOW_FIELD_REGEX.test(text) ||
+    GLOBAL_EQUITY_REGEX.test(text)
+  );
+}
+
 const FACET_DEFINITIONS = Object.freeze([
   { stateKey: 'pathologies', field: 'pathologies', isArray: true, vocabKey: 'pathologies' },
   { stateKey: 'modalities', field: 'modalities', isArray: true, vocabKey: 'modalities' },
@@ -441,6 +539,7 @@ export function createInitialFilterState() {
     hasOpenWeights: false,
     weightsOnly: false,
     openAccessOnly: false,
+    hasEquityFocus: false,
     year: null,
     yearMin: null,
     yearMax: null,
@@ -669,6 +768,7 @@ export function filterItems(items, queryState = {}) {
   const requireLongitudinal = Boolean(qs.hasLongitudinal);
   const requireOpenWeights = Boolean(qs.hasOpenWeights || qs.weightsOnly);
   const requireOpenAccess = Boolean(qs.openAccessOnly);
+  const requireEquityFocus = Boolean(qs.hasEquityFocus);
 
   const exactYear = parseOptionalNumber(qs.year);
   const yearMin = parseOptionalNumber(qs.yearMin);
@@ -709,6 +809,7 @@ export function filterItems(items, queryState = {}) {
     }
     if (requireOpenWeights && item.weightsAvailable !== true) continue;
     if (requireOpenAccess && item.accessTier !== 'Open Access') continue;
+    if (requireEquityFocus && !matchesEquityFocus(item)) continue;
 
     const itemYear = extractRecordYear(item);
     if (exactYear !== null && itemYear !== exactYear) continue;
@@ -900,6 +1001,7 @@ export function computeFacetCounts(records, filterState = {}, schema = null) {
     weightsOnly: false,
   });
   const oaRelaxed = filterItems(safeRecords, { ...baseState, openAccessOnly: false });
+  const equityRelaxed = filterItems(safeRecords, { ...baseState, hasEquityFocus: false });
 
   result.toggles = {
     hasMolecular: molRelaxed.filter(
@@ -910,6 +1012,7 @@ export function computeFacetCounts(records, filterState = {}, schema = null) {
     ).length,
     hasOpenWeights: weightsRelaxed.filter((r) => r.weightsAvailable === true).length,
     openAccessOnly: oaRelaxed.filter((r) => r.accessTier === 'Open Access').length,
+    hasEquityFocus: equityRelaxed.filter((r) => matchesEquityFocus(r)).length,
   };
 
   return result;
